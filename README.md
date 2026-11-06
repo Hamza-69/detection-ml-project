@@ -57,4 +57,6 @@ fly deploy . --config deploy/fly.toml --dockerfile deploy/Dockerfile --remote-on
 
 - The official VinDr-CXR test labels (3,000 images, 5-reader consensus) are on PhysioNet behind credentialed access; all
   current results use an **internal test split** of the 15,000 training images.
-- Trained weights: [TODO: GitHub release link].
+- Trained weights (preliminary, Milestone 2): [release v0.2-milestone2](https://github.com/Hamza-69/detection-ml-project/releases/tag/v0.2-milestone2).
+  `demo_weights.tar.gz` holds the demo models; unpack it with `tar -xzf demo_weights.tar.gz -C deploy/` so they land in
+  `deploy/models/`. `all_checkpoints.tar.gz` holds all 18 DenseNet-121 runs and the YOLOv8s checkpoint.
