@@ -140,6 +140,7 @@ These are preliminary readings: one internal test split, ≤ 12 epochs, {{len(cn
 - **Data access.** The official competition labels required accepting the competition rules; the original DICOMs (~200 GB) did not fit on the machine, so we used a public 512 px PNG conversion and verified it against official DICOMs (Section 2). The official 3,000-image test labels need PhysioNet credentialed access, so all test numbers are on an internal split.
 - **Class weighting changes calibration.** A positive-class weight of up to 10× deliberately pushes predicted probabilities up for rare findings. This is useful for sensitivity but is in direct tension with calibration, and a single temperature cannot remove a shift of this kind. We therefore report every label strategy with and without the weight (Tables 2a/2b) rather than letting the weight hide or create a soft-vs-majority difference.
 - **Normal-vs-abnormal shortcut.** Per-finding AUROC over all test images is inflated by the easy separation of normal from abnormal images (the classical model reaches 0.95 abnormal AUROC from HOG/LBP features alone). The within-abnormal AUROC is the more informative ladder comparison.
+- **Calibration depends on the selected epoch.** With pos_weight, ECE varies strongly between seeds of the same configuration (majority labels: {{f(agg('pw','majority','macro_ece').min())}}–{{f(agg('pw','majority','macro_ece').max())}}); the selected epochs were {{', '.join(str(RUNS[n]['best_epoch']) for n in sorted(RUNS) if n.startswith('cnn_majority_s') and not n.endswith('_nopw'))}} for the three majority seeds, and model selection by validation AUROC ignores calibration. Three seeds are therefore the minimum for any calibration claim, and we report seed spread next to every difference.
 - **Small validation counts.** Model selection uses validation macro-AUROC, but some classes have very few validation positives (Pneumothorax 3, Atelectasis 6), so selection is noisy for them.
 - **Detection resolution.** YOLO was trained at 640 px from 512 px images; small findings (nodules, calcifications) are likely under-resolved.
 - [TODO Hamza: anything else that broke or changed that the group wants to mention]
@@ -151,9 +152,10 @@ These are preliminary readings: one internal test split, ≤ 12 epochs, {{len(cn
 3. **Detection at 1024 px** (from the original DICOMs or the 1024 px conversion), with recall/AP split by box size.
 4. **Grad-CAM vs radiologist boxes:** pointing-game / IoU of Grad-CAM peaks with the fused boxes, CNN vs baseline coefficient maps.
 5. **Failure analysis:** errors by box size, by class frequency, by agreement level, and under image-quality degradation (contrast and Laplacian-variance bins on test images; controlled blur, noise and downsampling), with augmentation as mitigation.
-6. **Coverage–accuracy curve:** refer the least-confident cases and report performance on the cases kept, for each label strategy, before/after temperature scaling.
-7. **Full complexity analysis** (training GPU-hours, CPU/GPU latency, model size, need for a GPU at deployment) and the per-finding "is the CNN worth it" table.
-8. **Poster, final report, notebook and GitHub repository** with trained models available for download.
+6. **Recalibration as a mitigation:** report per-class Platt scaling alongside temperature scaling for every model, and check it on the official test set.
+7. **Coverage–accuracy curve:** refer the least-confident cases and report performance on the cases kept, for each label strategy, before/after temperature scaling.
+8. **Full complexity analysis** (training GPU-hours, CPU/GPU latency, model size, need for a GPU at deployment) and the per-finding "is the CNN worth it" table.
+9. **Poster, final report, notebook and GitHub repository** with trained models available for download.
 
 # References
 
