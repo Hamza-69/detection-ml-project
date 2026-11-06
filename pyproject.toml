@@ -1,0 +1,32 @@
+[project]
+name = "vindr-cxr"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "ensemble-boxes>=1.0.10",
+    "grad-cam>=1.5.7",
+    "gradio>=6.31.0",
+    "kaggle>=2.2.5",
+    "lightgbm>=4.7.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "opencv-python-headless>=5.0.0.93",
+    "pandas>=3.1.1",
+    "scikit-image>=0.26.0",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
+    "tqdm>=4.70.1",
+    "ultralytics>=8.4.203",
+]
+
+# PyTorch with CUDA 12.8 wheels (needed for Blackwell GPUs such as the RTX PRO 6000).
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
