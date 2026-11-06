@@ -6,3 +6,4 @@ deploy/models/
 yolov8s.pt
 .gradio/
 exports/
+local_results/
