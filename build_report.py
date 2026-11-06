@@ -216,7 +216,12 @@ def main():
     md_path = f"{OUT}/progress_report.md"
     open(md_path, "w").write(text)
     subprocess.run(["pandoc", md_path, "-o", f"{OUT}/progress_report.docx", f"--resource-path={OUT}"], check=True)
-    print("wrote", md_path, "and progress_report.docx")
+    # copy the plain-language hypothesis notes (report section 5) into results/summary.md
+    notes = text.split("# 5. What the results suggest so far", 1)[1].split("\n# 6.", 1)[0]
+    summ = open(f"{R}/summary.md").read()
+    summ = summ.split("## Notes on hypotheses")[0] + "## Notes on hypotheses (preliminary; copied from the report, section 5)\n" + notes
+    open(f"{R}/summary.md", "w").write(summ)
+    print("wrote", md_path, "and progress_report.docx; updated summary.md notes")
 
 
 if __name__ == "__main__":
