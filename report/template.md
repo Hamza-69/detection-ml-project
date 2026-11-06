@@ -171,4 +171,4 @@ These are preliminary readings: one internal test split, ≤ 12 epochs, {{len(cn
 10. T. Ojala, M. Pietikäinen, T. Mäenpää, "Multiresolution gray-scale and rotation invariant texture classification with local binary patterns," *IEEE TPAMI*, 24(7), 2002.
 11. G. Ke et al., "LightGBM: A highly efficient gradient boosting decision tree," *NeurIPS*, 2017.
 
-Code: [TODO Hamza: GitHub URL — https://github.com/Hamza-69/detection-ml-project once pushed]
+Code: https://github.com/Hamza-69/detection-ml-project
