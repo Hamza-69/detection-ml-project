@@ -87,7 +87,7 @@ def to_tensor(img512):
 def predict_probs(key, img512, use_T):
     T = TEMPS.get(key, 1.0) if use_T else 1.0
     if key == "logreg":
-        from baseline import extract_features  # same feature code as training
+        from features import extract_features  # same feature code as training
         f = extract_features(img512)[None]
         p = np.array([m.predict_proba(f)[0, 1] for m in get_logreg()])
         z = np.log(np.clip(p, 1e-6, 1 - 1e-6) / np.clip(1 - p, 1e-6, 1))

@@ -18,40 +18,22 @@ import os
 import time
 from multiprocessing import Pool
 
-import cv2
 import joblib
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
-from skimage.feature import hog, local_binary_pattern
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from features import extract_features
 from prepare import TARGETS
 
-FEAT_SIZE = 256
 C_GRID = [1e-4, 1e-3, 1e-2, 1e-1]
 LEAVES_GRID = [15, 31]
-
-
-def grid_cells(img, n=4):
-    h = img.shape[0] // n
-    return [img[i * h:(i + 1) * h, j * h:(j + 1) * h] for i in range(n) for j in range(n)]
-
-
-def extract_features(img512):
-    """One uint8 512x512 image -> 1988-dim float32 feature vector."""
-    img = cv2.resize(img512, (FEAT_SIZE, FEAT_SIZE), interpolation=cv2.INTER_AREA)
-    f_hog = hog(img, orientations=9, pixels_per_cell=(32, 32), cells_per_block=(2, 2), feature_vector=True)
-    lbp = local_binary_pattern(img, P=8, R=1, method="uniform")  # values 0..9
-    f_lbp = np.concatenate([np.bincount(c.astype(int).ravel(), minlength=10) / c.size for c in grid_cells(lbp)])
-    f_hist = np.histogram(img, bins=32, range=(0, 256))[0] / img.size
-    f_grid = np.array([[c.mean() / 255, c.std() / 255] for c in grid_cells(img)]).ravel()
-    return np.concatenate([f_hog, f_lbp, f_hist, f_grid]).astype(np.float32)
 
 
 def _feat_worker(args):
