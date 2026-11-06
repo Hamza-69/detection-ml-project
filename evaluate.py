@@ -209,7 +209,7 @@ def reliability_curve(P, Y):
     return np.array(xs), np.array(ys), np.array(ns)
 
 
-def fig_reliability(preds, path):
+def fig_reliability(preds, path, tag=""):
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.6), sharey=True)
     for ax, use_T, title in [(axes[0], False, "before temperature scaling"), (axes[1], True, "after temperature scaling")]:
         ax.plot([0, 1], [0, 1], "k--", lw=1, label="perfect calibration")
@@ -221,14 +221,14 @@ def fig_reliability(preds, path):
         ax.set_xlim(0, 1); ax.set_ylim(0, 1)
     axes[0].set_ylabel("observed frequency (majority label)")
     axes[0].legend(fontsize=8)
-    fig.suptitle("Reliability diagram, internal test set (bins with >= 20 image-finding pairs)")
+    fig.suptitle(f"Reliability diagram, internal test set, CNN seed 42 {tag} (bins with >= 20 image-finding pairs)")
     fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
 
 
-def fig_h2(summary, path, suffix=""):
+def fig_h2(summary, path, suffix="", variant="pw"):
     fig, ax = plt.subplots(figsize=(5.5, 4.4))
     for lbl in ["majority", "soft", "union"]:
-        rows = summary[(summary.kind == "cnn") & (summary.labels == lbl) & (summary.variant == "pw")]
+        rows = summary[(summary.kind == "cnn") & (summary.labels == lbl) & (summary.variant == variant)]
         if len(rows) == 0:
             continue
         cols = [f"dis_mean_p{suffix}_{v}of3" for v in range(4)]
@@ -240,8 +240,8 @@ def fig_h2(summary, path, suffix=""):
     ax.set_xticks(range(4), ["0/3", "1/3", "2/3", "3/3"])
     ax.set_xlabel("readers who marked the finding")
     ax.set_ylabel("mean predicted probability")
-    ax.set_title("Disagreement set: probability vs reader agreement\n(14 findings pooled" +
-                 (", temperature-scaled)" if suffix else ")"), fontsize=10)
+    ax.set_title("Disagreement set: probability vs reader agreement\n(14 findings pooled, " +
+                 ("with pos_weight" if variant == "pw" else "no pos_weight") + (", temperature-scaled)" if suffix else ")"), fontsize=10)
     ax.set_ylim(0, 1); ax.legend(fontsize=8)
     fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
 
@@ -338,8 +338,8 @@ def main():
         t0 = time.time()
         row, per, pr = evaluate_model(name, m, lab, votes, boot_idx)
         rows.append(row); pers.append(per)
-        if m["kind"] == "cnn" and m["seed"] == 42 and m["variant"] == "pw":
-            preds_main[m["labels"]] = pr
+        if m["kind"] == "cnn" and m["seed"] == 42:
+            preds_main.setdefault(m["variant"], {})[m["labels"]] = pr
         print(f"  {name}: macroAUROC {row['macro_auroc']:.4f} ECE {row['macro_ece']:.4f} -> {row['macro_ece_T']:.4f} "
               f"({time.time() - t0:.0f}s)", flush=True)
     S = pd.DataFrame(rows)
@@ -371,10 +371,13 @@ def main():
     agg.to_csv(f"{R}/tables/seed_aggregate.csv", index=False)
 
     # figures
-    if preds_main:
-        fig_reliability(preds_main, f"{R}/fig_reliability.png")
-    fig_h2(S, f"{R}/fig_h2_disagreement.png")
-    fig_h2(S, f"{R}/fig_h2_disagreement_T.png", suffix="_T")
+    for variant, sfx in [("pw", ""), ("nopw", "_nopw")]:
+        if variant in preds_main:
+            fig_reliability(preds_main[variant], f"{R}/fig_reliability{sfx}.png",
+                            "with pos_weight" if variant == "pw" else "no pos_weight")
+        if ((S.kind == "cnn") & (S.variant == variant)).any():
+            fig_h2(S, f"{R}/fig_h2_disagreement{sfx}.png", variant=variant)
+            fig_h2(S, f"{R}/fig_h2_disagreement{sfx}_T.png", suffix="_T", variant=variant)
     counts = pd.read_csv(f"{R}/split_counts.csv", index_col=0)["train"].to_dict()
     maj_names = [n for n, m in models.items() if m["kind"] == "cnn" and m["labels"] == "majority" and m["variant"] == "pw"]
     if maj_names and "baseline_logreg" in models:
