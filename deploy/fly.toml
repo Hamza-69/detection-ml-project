@@ -1,5 +1,5 @@
 # Fly.io config for the public CPU demo. Deploy from the repo root:
-#   fly deploy --config deploy/fly.toml
+#   fly deploy . --config deploy/fly.toml --dockerfile deploy/Dockerfile
 app = "vindr-cxr-aub"
 primary_region = "fra"
 
