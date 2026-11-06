@@ -81,7 +81,7 @@ def table_ci(S):
     rows = []
     for name in ["baseline_logreg", "baseline_lgbm"] + list(cnn(S, "pw", "majority").index):
         r = S.loc[name]
-        rows.append([name.replace("baseline_", "").replace("cnn_", "CNN "), f"{r.macro_auroc:.3f} [{r.macro_auroc_lo:.3f}, {r.macro_auroc_hi:.3f}]",
+        rows.append([{"baseline_logreg": "LogReg", "baseline_lgbm": "LightGBM"}.get(name, name.replace("cnn_", "CNN ")), f"{r.macro_auroc:.3f} [{r.macro_auroc_lo:.3f}, {r.macro_auroc_hi:.3f}]",
                      f(r.macro_auroc_within_abnormal), f"{r.abnormal_auroc:.3f} [{r.abnormal_auroc_lo:.3f}, {r.abnormal_auroc_hi:.3f}]"])
     return md(pd.DataFrame(rows, columns=["Model", "Macro-AUROC [95% CI]", "Macro-AUROC, abnormal images only", "Abnormal-vs-normal AUROC [95% CI]"]))
 
@@ -92,7 +92,7 @@ def table_labels(S, variant):
         g = cnn(S, variant, lab)
         if not len(g):
             continue
-        rows.append([lab, len(g), pm(g.macro_auroc), pm(g.macro_auroc_within_abnormal), pm(g.macro_ece), pm(g.macro_ece_T), pm(g.macro_ece_platt),
+        rows.append([lab, len(g), pm(g.macro_auroc), pm(g.macro_auroc_within_abnormal), pm(g.macro_ece, 4), pm(g.macro_ece_T, 4), pm(g.macro_ece_platt, 4),
                      f"{g['T'].min():.2f}–{g['T'].max():.2f}" if len(g) > 1 else f(g['T'].iloc[0], 2),
                      pm(g.macro_brier, 4), pm(g["macro_sens@0.5"]), pm(g["macro_spec@0.5"])])
     return md(pd.DataFrame(rows, columns=["Labels", "Seeds", "Macro-AUROC", "Macro-AUROC (abn. only)", "Macro-ECE",
@@ -119,13 +119,13 @@ def table_disagreement(S):
                 continue
             rows.append([f"CNN {lab}" + (" (no pos_weight)" if variant == "nopw" else ""), len(g),
                          *[f(g[f"dis_mean_p_{v}of3"].mean()) for v in range(4)],
-                         pm(g.dis_spearman_marked), pm(g.dis_mae_vs_soft_splitvote), pm(g.dis_mae_vs_soft_splitvote_T), pm(g.dis_ece_vs_soft)])
+                         pm(g.dis_spearman_marked), pm(g.dis_mae_vs_soft_splitvote), pm(g.dis_mae_vs_soft_splitvote_T), pm(g.dis_ece_vs_soft, 4)])
     for name in ["baseline_logreg", "baseline_lgbm"]:
         r = S.loc[name]
-        rows.append([name.replace("baseline_", "") + " (baseline)", 1, *[f(r[f"dis_mean_p_{v}of3"]) for v in range(4)],
-                     f(r.dis_spearman_marked), f(r.dis_mae_vs_soft_splitvote), f(r.dis_mae_vs_soft_splitvote_T), f(r.dis_ece_vs_soft)])
+        rows.append([{"baseline_logreg": "LogReg", "baseline_lgbm": "LightGBM"}[name] + " (baseline)", 1, *[f(r[f"dis_mean_p_{v}of3"]) for v in range(4)],
+                     f(r.dis_spearman_marked), f(r.dis_mae_vs_soft_splitvote), f(r.dis_mae_vs_soft_splitvote_T), f(r.dis_ece_vs_soft, 4)])
     return md(pd.DataFrame(rows, columns=["Model", "Seeds", "p̄ @0/3", "p̄ @1/3", "p̄ @2/3", "p̄ @3/3", "Spearman (marked)",
-                                          "|p − k/3| split votes", "same after T", "ECE vs soft"]))
+                                          "mean abs(p − k/3), split votes", "same after T", "ECE vs soft"]))
 
 
 def table_yolo(Y):
@@ -154,7 +154,7 @@ def table_complexity(S, BT, CT, YR, RUNS):
     if YR:
         rows.append(["YOLOv8s (detector)", f"{CT['yolo_n_params']:,}" if "yolo_n_params" in CT else "–",
                      f"{YR['train_gpu_minutes']} GPU-min ({YR['epochs']} epochs, GPU shared)",
-                     f(CT.get("yolo_cpu_ms_per_image"), 1), f"{YR['gpu_ms_per_image_predict']} (batch 64, incl. loading)", "mAP@0.4 " + f(YR.get("map40", np.nan))])
+                     f(CT.get("yolo_cpu_ms_per_image"), 1), f"{YR['gpu_ms_per_image_predict']} (batch 64, incl. loading, GPU shared)", "mAP@0.4 " + f(YR.get("map40", np.nan))])
     return md(pd.DataFrame(rows, columns=["Model", "Parameters", "Training cost", "CPU ms / image", "GPU ms / image", "Macro-AUROC"]))
 
 

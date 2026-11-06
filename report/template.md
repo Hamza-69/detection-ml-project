@@ -6,6 +6,8 @@ date: "6 November 2026"
 
 *Progress report and preliminary results (Milestone 2). All results are preliminary: one internal test split, at most 12 training epochs, three seeds.*
 
+[TODO Hamza: this draft is longer than the 3–4 page target (about 3,200 words of text in Sections 1–7 plus 4 tables and 4 figures). Candidates to cut or move to the appendix: the Detector and Metrics paragraphs of Section 3, the box-label paragraph of Section 2, the reliability diagram (keep Table 2a/2b), and the Detection paragraph of Section 5. Delete this note before submitting.]
+
 # 1. Research question, hypotheses, and changes since the proposal
 
 **Main question.** When radiologists disagree on the training labels, does training on *soft labels* (the fraction of the three readers who marked a finding) give better-calibrated predictions than training on *majority-vote* or *union* labels — especially on images where the readers disagreed — without lowering discrimination (AUROC)?
@@ -70,31 +72,19 @@ All results are on the internal test split ({{ f"{DS['split']['test']:,}" }} ima
 
 {{T_LADDER}}
 
-**Table 1b.** Macro-AUROC with confidence intervals.
-
-{{T_CI}}
-
 ![Per-finding AUROC, logistic-regression baseline vs CNN (majority labels), findings ordered by number of training positives.](../results/fig_ladder_auroc.png){width=95%}
 
 ## 4.2 Label strategies: discrimination, calibration, sensitivity (H1, H3, temperature scaling)
 
-**Table 2a.** CNN with pos_weight (main setting), mean ± SD over seeds. ECE and Brier are macro averages over the 14 findings; T = fitted temperature.
+**Table 2a.** CNN with pos_weight (main setting), mean ± SD over seeds (per-seed paired bootstrap differences: Appendix Table A2). ECE and Brier are macro averages over the 14 findings; T = fitted temperature.
 
 {{T_LABELS_PW}}
-
-Paired bootstrap differences on the test set (same seed; positive Δ ECE = worse calibrated than majority):
-
-{{T_DIFF_PW}}
 
 **Table 2b.** Same, CNN trained **without** pos_weight (plain BCE).
 
 {{T_LABELS_NOPW}}
 
-{{T_DIFF_NOPW}}
-
 ![Reliability diagram (seed 42, with pos_weight), 14 findings pooled, before and after temperature scaling.](../results/fig_reliability.png){width=95%}
-
-![Reliability diagram (seed 42, without pos_weight).](../results/fig_reliability_nopw.png){width=95%}
 
 ## 4.3 Behaviour on the disagreement set (H2)
 
@@ -104,17 +94,13 @@ Paired bootstrap differences on the test set (same seed; positive Δ ECE = worse
 
 ![Mean predicted probability by reader agreement (with pos_weight; band = range over seeds). Dashed: the reader fraction itself.](../results/fig_h2_disagreement.png){width=60%}
 
-![Same, CNN trained without pos_weight.](../results/fig_h2_disagreement_nopw.png){width=60%}
-
 ## 4.4 Localization: YOLOv8s (mAP@0.4)
 
-**Table 4.** AP at IoU ≥ 0.4 per class on the internal test split, against fused boxes supported by ≥ 2 readers (train {{YR['epochs']}} epochs at {{YR['imgsz']}} px).
-
-{{T_YOLO}}
+YOLOv8s ({{YR['epochs']}} epochs at {{YR['imgsz']}} px) reaches **mAP@0.4 = {{f(YR['map40'])}}** on the internal test split against fused boxes supported by ≥ 2 readers; per-class AP is in Appendix Table A3.
 
 ## 4.5 Complexity
 
-**Table 5.** Cost of each model (CPU timing: single image; GPU: {{CT.get('gpu', 'RTX PRO 6000')}}). Macro-AUROC from Tables 1–2a.
+**Table 4.** Cost of each model (CPU timing: single image; GPU: {{CT.get('gpu', 'RTX PRO 6000')}}). Macro-AUROC from Tables 1 and 2a.
 
 {{T_COMPLEX}}
 
@@ -122,9 +108,9 @@ Paired bootstrap differences on the test set (same seed; positive Δ ECE = worse
 
 These are preliminary readings: one internal test split, ≤ 12 epochs, {{len(cnn(S,'pw','majority'))}} seeds per configuration, and test labels that are 3-reader majority votes rather than the official 5-reader consensus.
 
-**H4 (CNN vs baseline) — first part supported, second part not.** The CNN's macro-AUROC ({{pm(agg('pw','majority','macro_auroc'))}}) is well above both baselines (logistic regression {{f(S.loc['baseline_logreg','macro_auroc'])}}, LightGBM {{f(S.loc['baseline_lgbm','macro_auroc'])}}), and the gap widens when only abnormal images are scored (CNN {{pm(agg('pw','majority','macro_auroc_within_abnormal'))}} vs {{f(S.loc['baseline_logreg','macro_auroc_within_abnormal'])}} / {{f(S.loc['baseline_lgbm','macro_auroc_within_abnormal'])}}): much of the classical models' score comes from separating normal from abnormal images, while the CNN is much better at telling *which* finding is present. Contrary to H4, the gain is not smaller on rare findings: the mean gain is {{f(H4['mean_gain_rare'])}} on the {{H4['n_rare']}} findings with < 150 training positives vs {{f(H4['mean_gain_common'])}} on the others, and the Spearman correlation between gain and number of training positives is {{f(H4['spearman_gain_vs_trainpos'],2)}}. The price is compute: the baselines train in minutes on a CPU and need no GPU, while each CNN run takes {{f(np.mean([r['train_gpu_minutes'] for r in RUNS.values()]),1)}} GPU-minutes (Table 5).
+**H4 (CNN vs baseline) — first part supported, second part not.** The CNN's macro-AUROC ({{pm(agg('pw','majority','macro_auroc'))}}) is well above both baselines (logistic regression {{f(S.loc['baseline_logreg','macro_auroc'])}}, LightGBM {{f(S.loc['baseline_lgbm','macro_auroc'])}}), and the gap widens when only abnormal images are scored (CNN {{pm(agg('pw','majority','macro_auroc_within_abnormal'))}} vs {{f(S.loc['baseline_logreg','macro_auroc_within_abnormal'])}} / {{f(S.loc['baseline_lgbm','macro_auroc_within_abnormal'])}}): much of the classical models' score comes from separating normal from abnormal images, while the CNN is much better at telling *which* finding is present. Contrary to H4, the gain is not smaller on rare findings: the mean gain is {{f(H4['mean_gain_rare'])}} on the {{H4['n_rare']}} findings with < 150 training positives vs {{f(H4['mean_gain_common'])}} on the others, and the Spearman correlation between gain and number of training positives is {{f(H4['spearman_gain_vs_trainpos'],2)}}. The price is compute: the baselines train in minutes on a CPU and need no GPU, while each CNN run takes {{f(np.mean([r['train_gpu_minutes'] for r in RUNS.values()]),1)}} GPU-minutes (Table 4).
 
-**H1 (soft labels better calibrated) — not supported with pos_weight; weakly supported without it.** With the positive-class weight, soft labels did not lower ECE: macro-ECE was {{pm(agg('pw','soft','macro_ece'))}} for soft vs {{pm(agg('pw','majority','macro_ece'))}} for majority, and the paired difference was positive (soft worse) for every seed (Table 2a). The AUROC part of H1 holds: soft and majority differ by at most {{f(D[(D.variant=='pw') & D.a.str.startswith('cnn_soft')].d_macro_auroc.abs().max(),4)}} macro-AUROC. The seed-to-seed SD of majority-label ECE ({{f(agg('pw','majority','macro_ece').std(),3)}}) is of the same order as the soft–majority gap, so the size of the difference is not yet reliable even though its sign is consistent. A plausible mechanism: with soft targets every image that *any* reader marked contributes positive mass to the loss, and the pos_weight multiplies that mass by up to 10, which inflates probabilities more than with majority targets.
+**H1 (soft labels better calibrated) — not supported with pos_weight; weakly supported without it.** With the positive-class weight, soft labels did not lower ECE: macro-ECE was {{pm(agg('pw','soft','macro_ece'))}} for soft vs {{pm(agg('pw','majority','macro_ece'))}} for majority, and the paired difference was positive (soft worse) for every seed, with the 95% CI excluding zero for {{int((D[(D.variant=='pw') & D.a.str.startswith('cnn_soft')].d_macro_ece_lo > 0).sum())}} of {{len(D[(D.variant=='pw') & D.a.str.startswith('cnn_soft')])}} seeds (Table 2a, Appendix A2). The AUROC part of H1 holds: soft and majority differ by at most {{f(D[(D.variant=='pw') & D.a.str.startswith('cnn_soft')].d_macro_auroc.abs().max(),4)}} macro-AUROC. The seed-to-seed SD of majority-label ECE ({{f(agg('pw','majority','macro_ece').std(),3)}}) is of the same order as the soft–majority gap, so the size of the difference is not yet reliable even though its sign is consistent. A plausible mechanism: with soft targets every image that *any* reader marked contributes positive mass to the loss, and the pos_weight multiplies that mass by up to 10, which inflates probabilities more than with majority targets.
 
 Without pos_weight (plain BCE, Table 2b) the result reverses: soft labels gave a lower macro-ECE than majority labels on every seed ({{pm(agg('nopw','soft','macro_ece'),4)}} vs {{pm(agg('nopw','majority','macro_ece'),4)}}; paired differences {{', '.join(f'{v:+.4f}' for v in D[(D.variant=='nopw') & D.a.str.startswith('cnn_soft')].sort_values('seed').d_macro_ece)}}), with the 95% CI excluding zero for {{int((D[(D.variant=='nopw') & D.a.str.startswith('cnn_soft')].d_macro_ece_hi < 0).sum())}} of {{len(D[(D.variant=='nopw') & D.a.str.startswith('cnn_soft')])}} seeds, and macro-AUROC unchanged (differences {{', '.join(f'{v:+.4f}' for v in D[(D.variant=='nopw') & D.a.str.startswith('cnn_soft')].sort_values('seed').d_macro_auroc)}}, all CIs including zero). The effect is consistent in sign but small in absolute terms, so we read H1 as weakly supported in the plain-BCE setting and not supported with pos_weight. The class weight itself is a trade-off: it raises macro-AUROC (majority labels {{pm(agg('pw','majority','macro_auroc'))}} with vs {{pm(agg('nopw','majority','macro_auroc'))}} without; abnormal images only {{pm(agg('pw','majority','macro_auroc_within_abnormal'))}} vs {{pm(agg('nopw','majority','macro_auroc_within_abnormal'))}}) and sensitivity at 0.5 ({{pm(agg('pw','majority','macro_sens@0.5'))}} vs {{pm(agg('nopw','majority','macro_sens@0.5'))}}), but multiplies macro-ECE by about {{f(agg('pw','majority','macro_ece').mean() / agg('nopw','majority','macro_ece').mean(), 1)}} for majority labels.
 
@@ -132,7 +118,7 @@ Without pos_weight (plain BCE, Table 2b) the result reverses: soft labels gave a
 
 **H2 (soft model tracks reader fraction on split votes) — partly supported: only without pos_weight, and only for how closely probabilities match the reader fraction, not for ranking.** With pos_weight, the mean absolute gap between predicted probability and reader fraction on split-vote pairs was essentially the same for soft ({{pm(agg('pw','soft','dis_mae_vs_soft_splitvote'))}}) and majority ({{pm(agg('pw','majority','dis_mae_vs_soft_splitvote'))}}) labels, and the Spearman correlations were also similar ({{pm(agg('pw','soft','dis_spearman_marked'))}} vs {{pm(agg('pw','majority','dis_spearman_marked'))}}). All CNNs do become less confident as fewer readers agree (Table 3, Figure): the mean probability rises monotonically from 0/3 to 3/3 agreement. Without pos_weight, the soft model's probabilities were consistently closer to the reader fraction on split-vote pairs (|p − k/3| {{pm(agg('nopw','soft','dis_mae_vs_soft_splitvote'))}} vs {{pm(agg('nopw','majority','dis_mae_vs_soft_splitvote'))}} for majority) and its ECE against the soft targets was lower ({{pm(agg('nopw','soft','dis_ece_vs_soft'),4)}} vs {{pm(agg('nopw','majority','dis_ece_vs_soft'),4)}}), but its rank correlation with the number of votes was not higher ({{pm(agg('nopw','soft','dis_spearman_marked'))}} vs {{pm(agg('nopw','majority','dis_spearman_marked'))}}). The soft model is therefore better at *how much* to hedge on contested cases, not at *ordering* cases by how contested they are. The majority model without pos_weight assigns low probabilities to split votes (mean {{f(agg('nopw','majority','dis_mean_p_1of3').mean())}} at 1/3 and {{f(agg('nopw','majority','dis_mean_p_2of3').mean())}} at 2/3): expected for 1/3 cases, which are negatives under majority voting, but also low for 2/3 cases, which are positives.
 
-**Temperature scaling.** A single temperature per model barely changes calibration here (T between {{f(cnn(S,'pw')['T'].min(),2)}} and {{f(cnn(S,'pw')['T'].max(),2)}} with pos_weight; Table 2a) and does not close the gap between label strategies; for union labels it even raises the macro-ECE over the 14 findings, because one temperature is fit jointly to all 15 outputs. The miscalibration caused by pos_weight is mainly a *shift* in the logits, which a single scale factor cannot remove. **Per-class Platt scaling** (one slope and intercept per output, fit on the validation set) does remove it: macro-ECE falls to {{f(cnn(S,'pw')['macro_ece_platt'].min(),4)}}–{{f(cnn(S,'pw')['macro_ece_platt'].max(),4)}} for every pos_weight model (majority {{pm(agg('pw','majority','macro_ece_platt'),4)}}, soft {{pm(agg('pw','soft','macro_ece_platt'),4)}}, union {{pm(agg('pw','union','macro_ece_platt'),4)}}), the same level as the logistic-regression baseline ({{f(S.loc['baseline_logreg','macro_ece'],4)}} uncalibrated). In other words, after a cheap per-class recalibration the choice of training label hardly matters for calibration, which is the outcome the proposal flagged as possible. Without pos_weight the models are already close to calibrated (T between {{f(cnn(S,'nopw')['T'].min(),2)}} and {{f(cnn(S,'nopw')['T'].max(),2)}}), temperature scaling changes little, and per-class Platt scaling brings every model to {{f(cnn(S,'nopw')['macro_ece_platt'].min(),4)}}–{{f(cnn(S,'nopw')['macro_ece_platt'].max(),4)}}.
+**Temperature scaling.** A single temperature per model barely changes calibration here (T between {{f(cnn(S,'pw')['T'].min(),2)}} and {{f(cnn(S,'pw')['T'].max(),2)}} with pos_weight; Table 2a) and does not close the gap between label strategies; for union labels it even raises the macro-ECE over the 14 findings, probably because one temperature is fit jointly to all 15 outputs. The miscalibration caused by pos_weight is mainly a *shift* in the logits, which a single scale factor cannot remove. **Per-class Platt scaling** (one slope and intercept per output, fit on the validation set) does remove it: macro-ECE falls to {{f(cnn(S,'pw')['macro_ece_platt'].min(),4)}}–{{f(cnn(S,'pw')['macro_ece_platt'].max(),4)}} for every pos_weight model (majority {{pm(agg('pw','majority','macro_ece_platt'),4)}}, soft {{pm(agg('pw','soft','macro_ece_platt'),4)}}, union {{pm(agg('pw','union','macro_ece_platt'),4)}}), the same level as the logistic-regression baseline ({{f(S.loc['baseline_logreg','macro_ece'],4)}} uncalibrated). In other words, after a cheap per-class recalibration the choice of training label hardly matters for calibration, which is the outcome the proposal flagged as possible. Without pos_weight the models are already close to calibrated (T between {{f(cnn(S,'nopw')['T'].min(),2)}} and {{f(cnn(S,'nopw')['T'].max(),2)}}), temperature scaling changes little, and per-class Platt scaling brings every model to {{f(cnn(S,'nopw')['macro_ece_platt'].min(),4)}}–{{f(cnn(S,'nopw')['macro_ece_platt'].max(),4)}}.
 
 **Detection.** YOLOv8s reaches mAP@0.4 = {{f(YR['map40'])}} on the internal test split. It is accurate for large, consistently marked findings (Aortic enlargement {{f(Y.set_index('class').loc['Aortic enlargement','AP@0.4'])}}, Cardiomegaly {{f(Y.set_index('class').loc['Cardiomegaly','AP@0.4'])}}) and poor for small or vaguely defined ones (Consolidation {{f(Y.set_index('class').loc['Consolidation','AP@0.4'])}}, Other lesion {{f(Y.set_index('class').loc['Other lesion','AP@0.4'])}}, Calcification {{f(Y.set_index('class').loc['Calcification','AP@0.4'])}}), several of which have fewer than 20 test boxes. This number is not comparable to the VinBigData leaderboard (different test labels, no "No finding" class).
 
@@ -174,3 +160,25 @@ Without pos_weight (plain BCE, Table 2b) the result reverses: soft labels gave a
 11. G. Ke et al., "LightGBM: A highly efficient gradient boosting decision tree," *NeurIPS*, 2017.
 
 Code: https://github.com/Hamza-69/detection-ml-project
+
+# Appendix (supporting tables and figures)
+
+**Table A1.** Macro-AUROC with 95% bootstrap confidence intervals.
+
+{{T_CI}}
+
+**Table A2.** Paired bootstrap differences between label strategies on the test set (same seed; positive Δ ECE = worse calibrated than majority). Top: with pos_weight; bottom: without.
+
+{{T_DIFF_PW}}
+
+{{T_DIFF_NOPW}}
+
+**Table A3.** YOLOv8s AP at IoU ≥ 0.4 per class on the internal test split.
+
+{{T_YOLO}}
+
+![Reliability diagram (seed 42, without pos_weight).](../results/fig_reliability_nopw.png){width=95%}
+
+![Same, CNN trained without pos_weight.](../results/fig_h2_disagreement_nopw.png){width=60%}
+
+
