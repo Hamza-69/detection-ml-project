@@ -277,8 +277,6 @@ def context():
         "T_DIFF_PW": table_diffs(D, "pw"), "T_DIFF_NOPW": table_diffs(D, "nopw"),
         "T_DIS": table_disagreement(S), "T_LABELS_ALL": table_labels_all(S), "T_DIS_COMPACT": table_dis_compact(S), "T_YOLO": table_yolo(Y), "T_COMPLEX": table_complexity(S, BT, CT, YR, RUNS),
         "T_BASELINE": table_baseline(S, CV, RUNS), "T_LABELS_MAIN": table_labels_main(S),
-        # page break in the .docx (the main text must fit on 2 pages; figures, references and appendix follow)
-        "PAGEBREAK": '```{=openxml}\n<w:p><w:r><w:br w:type="page"/></w:r></w:p>\n```',
     }
 
 
