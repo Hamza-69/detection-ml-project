@@ -4,7 +4,7 @@ author: "Mohammad Alaa Al Din Al Hamwi, Abdulrahman Kaddoura, Hamza Rachidi"
 date: "6 November 2026"
 ---
 
-*Milestone 2 — progress report and preliminary results. All results are preliminary: one internal test split, at most 12 training epochs, three seeds per configuration. Code: https://github.com/Hamza-69/detection-ml-project*
+*Milestone 2 — progress report and preliminary results. All results are preliminary: one internal test split, at most 12 training epochs, three seeds per configuration. Live demo: <https://vindr-cxr-aub.fly.dev/>*
 
 # 1. Research question and changes since the proposal
 
