@@ -293,6 +293,17 @@ def measure_timing(n_threads_cpu=4):
             model(to_input(x[:1]))
     out["cnn_cpu_ms_per_image_batch1"] = round(100 * (time.time() - t), 1)
     out["cpu_threads"] = n_threads_cpu
+    yw = f"{R}/yolo/yolov8s_majority/weights/best.pt"
+    if os.path.exists(yw):
+        from ultralytics import YOLO
+        y = YOLO(yw)
+        out["yolo_n_params"] = sum(p.numel() for p in y.model.parameters())
+        img = np.random.randint(0, 255, (512, 512, 3), dtype=np.uint8)
+        y.predict(img, imgsz=640, device="cpu", verbose=False)
+        t = time.time()
+        for _ in range(10):
+            y.predict(img, imgsz=640, device="cpu", verbose=False)
+        out["yolo_cpu_ms_per_image"] = round(100 * (time.time() - t), 1)
     json.dump(out, open(f"{R}/timing_cnn.json", "w"), indent=2)
     return out
 
@@ -517,6 +528,11 @@ def write_summary(S, PER, DIFF, agg, ladder, timing, btime, yolo, models, h4):
                  f"{cnn_runs[0]['gpu']}, 2 runs sharing the GPU) | {timing.get('cnn_cpu_ms_per_image_batch1', '–')} "
                  f"({timing.get('cpu_threads', '–')} threads) | {timing.get('cnn_gpu_ms_per_image_batch64', '–')} (batch 64), "
                  f"{timing.get('cnn_gpu_ms_latency_batch1', '–')} (batch 1) |")
+    if os.path.exists(f"{R}/yolo/run.json"):
+        y = json.load(open(f"{R}/yolo/run.json"))
+        L.append(f"| YOLOv8s (detector, separate task) | {timing.get('yolo_n_params', '–')} | {y['train_gpu_minutes']} GPU-min "
+                 f"({y['epochs']} epochs @ {y['imgsz']} px, GPU shared with CNN runs) | {timing.get('yolo_cpu_ms_per_image', '–')} | "
+                 f"{y['gpu_ms_per_image_predict']} (batch 64 incl. image loading, GPU shared) |")
     L += ["", "## Notes on hypotheses", "", "[filled in by hand after reading the tables - see report]", ""]
     open(f"{R}/summary.md", "w").write("\n".join(L))
 
