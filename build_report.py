@@ -92,11 +92,11 @@ def table_labels(S, variant):
         g = cnn(S, variant, lab)
         if not len(g):
             continue
-        rows.append([lab, len(g), pm(g.macro_auroc), pm(g.macro_auroc_within_abnormal), pm(g.macro_ece), pm(g.macro_ece_T),
+        rows.append([lab, len(g), pm(g.macro_auroc), pm(g.macro_auroc_within_abnormal), pm(g.macro_ece), pm(g.macro_ece_T), pm(g.macro_ece_platt),
                      f"{g['T'].min():.2f}–{g['T'].max():.2f}" if len(g) > 1 else f(g['T'].iloc[0], 2),
                      pm(g.macro_brier, 4), pm(g["macro_sens@0.5"]), pm(g["macro_spec@0.5"])])
     return md(pd.DataFrame(rows, columns=["Labels", "Seeds", "Macro-AUROC", "Macro-AUROC (abn. only)", "Macro-ECE",
-                                          "Macro-ECE after T", "T", "Macro-Brier", "Sensitivity @0.5", "Specificity @0.5"]))
+                                          "Macro-ECE after T", "Macro-ECE after Platt", "T", "Macro-Brier", "Sensitivity @0.5", "Specificity @0.5"]))
 
 
 def table_diffs(D, variant):

@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize_scalar
 from scipy.stats import rankdata, spearmanr
+from sklearn.linear_model import LogisticRegression
 
 from prepare import FINDINGS, TARGETS
 
@@ -128,6 +129,9 @@ def evaluate_model(name, m, lab, votes, boot_idx):
     yv = lab["majority"].loc[m["val"].index].values
     T = fit_temperature(zv, yv)
     PT = sigmoid(Z / T)
+    # per-class Platt scaling (p = sigmoid(a*z + b) per output, fit on val): can remove a shift, unlike one temperature
+    PP = np.column_stack([LogisticRegression(C=1e4, max_iter=1000).fit(zv[:, k:k + 1], yv[:, k]).predict_proba(Z[:, k:k + 1])[:, 1]
+                          for k in range(15)])
 
     aucs = per_class(auc, P, Y, range(15))
     macro = np.nanmean(aucs[:14])
@@ -138,6 +142,7 @@ def evaluate_model(name, m, lab, votes, boot_idx):
     ci_abn = boot_ci(lambda ix: auc(Y[ix, 14], P[ix, 14]), len(Y), boot_idx)
     eces = per_class(ece, P, Y, range(15))
     eces_T = per_class(ece, PT, Y, range(15))
+    eces_P = per_class(ece, PP, Y, range(15))
     briers = ((P - Y) ** 2).mean(0)
     briers_T = ((PT - Y) ** 2).mean(0)
     pred = P >= 0.5
@@ -162,7 +167,8 @@ def evaluate_model(name, m, lab, votes, boot_idx):
         "macro_auroc": macro, "macro_auroc_lo": ci_macro[0], "macro_auroc_hi": ci_macro[1],
         "abnormal_auroc": aucs[14], "abnormal_auroc_lo": ci_abn[0], "abnormal_auroc_hi": ci_abn[1],
         "macro_auroc_within_abnormal": np.nanmean(aucs_abn),
-        "macro_ece": eces[:14].mean(), "macro_ece_T": eces_T[:14].mean(),
+        "macro_ece": eces[:14].mean(), "macro_ece_T": eces_T[:14].mean(), "macro_ece_platt": eces_P[:14].mean(),
+        "macro_brier_platt": ((PP - Y) ** 2).mean(0)[:14].mean(),
         "abnormal_ece": eces[14], "abnormal_ece_T": eces_T[14],
         "macro_brier": briers[:14].mean(), "macro_brier_T": briers_T[:14].mean(), "T": T,
         "macro_sens@0.5": np.nanmean(sens), "macro_spec@0.5": np.nanmean(spec),
