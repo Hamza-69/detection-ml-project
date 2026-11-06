@@ -1,24 +1,33 @@
 """Step 7 - assemble the progress report from report/template.md and the result files.
 
-  uv run python build_report.py      # -> /workspace/report/progress_report.md and .docx
+  uv run python build_report.py      # -> <report dir>/progress_report.md and .docx (needs pandoc)
 
-Every number in the report comes from a file in /workspace/results: tables are generated here, and numbers in the
+Every number in the report comes from a file in the results folder: tables are generated here, and numbers in the
 text are written in the template as {{ expression }} placeholders that are evaluated against the result tables
 (so nothing is typed by hand). Placeholders use the objects defined in `context()` below.
+
+Folders: on the pod, /workspace/results and /workspace/report. On a laptop (no /workspace), the downloaded copy in
+local_results/results and local_results/report. Override with RESULTS_DIR / REPORT_DIR.
 """
 import json
 import os
 import re
+import shutil
 import subprocess
+import tempfile
+import zipfile
 
 import numpy as np
 import pandas as pd
 
 from prepare import FINDINGS, TARGETS
 
-R = "/workspace/results"
-OUT = "/workspace/report"
-TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "report", "template.md")
+HERE = os.path.dirname(os.path.abspath(__file__))
+ON_POD = os.path.isdir("/workspace/results")
+R = os.environ.get("RESULTS_DIR", "/workspace/results" if ON_POD else os.path.join(HERE, "local_results", "results"))
+OUT = os.environ.get("REPORT_DIR", "/workspace/report" if ON_POD else os.path.join(HERE, "local_results", "report"))
+DATA = "/workspace/data"
+TEMPLATE = os.path.join(HERE, "report", "template.md")
 LABELS = ["majority", "soft", "union"]
 
 
@@ -75,6 +84,37 @@ def table_ladder(S, L):
                  f(F.baseline_lgbm_within_abn.mean()), f(F.cnn_majority_within_abn.mean())])
     return md(pd.DataFrame(rows, columns=["Finding", "Train pos.", "LogReg", "LightGBM", "CNN (maj.)", "Gain",
                                           "LogReg (abn. only)", "LightGBM (abn. only)", "CNN (abn. only)"]))
+
+
+def table_baseline(S, CV, RUNS):
+    """Main-text Table 1: tuned baselines (validation = 5-fold CV on train) next to the CNN (validation = held-out
+    val split at the selected epoch), then the internal-test numbers."""
+    rows = []
+    for name, lab in [("baseline_logreg", "logreg"), ("baseline_lgbm", "lgbm")]:
+        r = S.loc[name]
+        cv = CV[(CV.model == lab) & CV.target.isin(FINDINGS)].cv_auroc.mean()
+        rows.append([{"logreg": "Logistic regression", "lgbm": "LightGBM"}[lab], f(cv),
+                     f"{r.macro_auroc:.3f} [{r.macro_auroc_lo:.3f}, {r.macro_auroc_hi:.3f}]",
+                     f(r.macro_auroc_within_abnormal), f(r.abnormal_auroc), f(r.macro_ece)])
+    g = cnn(S, "pw", "majority")
+    val = pd.Series([RUNS[n]["best_val_macro_auroc"] for n in g.index])
+    rows.append(["DenseNet-121", pm(val), pm(g.macro_auroc),
+                 pm(g.macro_auroc_within_abnormal), pm(g.abnormal_auroc), pm(g.macro_ece)])
+    return md(pd.DataFrame(rows, columns=["Model", "Val. macro-AUROC", "Test macro-AUROC",
+                                          "Test, abnormal images only", "Abnormal vs normal", "Macro-ECE"]))
+
+
+def table_labels_main(S):
+    """Main-text Table 2: the six CNN configurations, mean ± SD over seeds, 3 decimals."""
+    rows = []
+    for variant, vname in [("pw", "yes"), ("nopw", "no")]:
+        for lab in LABELS:
+            g = cnn(S, variant, lab)
+            if len(g):
+                rows.append([lab, vname, pm(g.macro_auroc), pm(g.macro_ece), pm(g.macro_ece_platt), pm(g.macro_brier),
+                             pm(g["macro_sens@0.5"], 2), pm(g["macro_spec@0.5"])])
+    return md(pd.DataFrame(rows, columns=["Labels", "pos_weight", "AUROC", "ECE", "ECE after Platt",
+                                          "Brier", "Sens. @0.5", "Spec. @0.5"]))
 
 
 def table_ci(S):
@@ -187,14 +227,17 @@ def table_complexity(S, BT, CT, YR, RUNS):
 
 
 def data_summary():
-    """Counts quoted in sections 2-3, computed from the data files and saved to results/data_summary.json."""
-    D = "/workspace/data"
+    """Counts quoted in sections 1-2, computed from the data files and saved to results/data_summary.json.
+    Without the data folder (laptop), the saved data_summary.json from the pod run is used instead."""
+    D = DATA
+    st = pd.read_csv(f"{R}/disagreement_stats.csv").set_index("finding")
+    if not os.path.exists(f"{D}/kaggle/train.csv"):
+        return json.load(open(f"{R}/data_summary.json")), st
     raw = pd.read_csv(f"{D}/kaggle/train.csv")
     sp = pd.read_csv(f"{D}/splits.csv").split.value_counts().to_dict()
     box = pd.read_csv(f"{D}/boxes_fused.csv")
     maj = box[box.support >= 2]
     ver = pd.read_csv(f"{R}/image_verification.csv")
-    st = pd.read_csv(f"{R}/disagreement_stats.csv").set_index("finding")
     fs = st.loc[FINDINGS]
     out = {"n_rows": len(raw), "n_images": raw.image_id.nunique(), "n_readers": raw.rad_id.nunique(),
            "readers_per_image": sorted(raw.groupby("image_id").rad_id.nunique().unique().tolist()),
@@ -228,12 +271,56 @@ def context():
     CV = pd.read_csv(f"{R}/baseline/cv_results.csv")
     return {"DS": DS, "ST": st, "SC": SC, "CV": CV, "T_STATS": table_stats(st),
         "S": S, "D": D, "L": L, "H4": H4, "Y": Y, "YR": YR, "BT": BT, "CT": CT, "RUNS": RUNS, "np": np,
-        "f": f, "pm": pm, "agg": agg, "cnn": cnn,
+        "f": f, "pm": pm, "agg": agg, "cnn": cnn, "FINDINGS": FINDINGS,
         "T_LADDER": table_ladder(S, L), "T_CI": table_ci(S),
         "T_LABELS_PW": table_labels(S, "pw"), "T_LABELS_NOPW": table_labels(S, "nopw"),
         "T_DIFF_PW": table_diffs(D, "pw"), "T_DIFF_NOPW": table_diffs(D, "nopw"),
         "T_DIS": table_disagreement(S), "T_LABELS_ALL": table_labels_all(S), "T_DIS_COMPACT": table_dis_compact(S), "T_YOLO": table_yolo(Y), "T_COMPLEX": table_complexity(S, BT, CT, YR, RUNS),
+        "T_BASELINE": table_baseline(S, CV, RUNS), "T_LABELS_MAIN": table_labels_main(S),
+        # page break in the .docx (the main text must fit on 2 pages; figures, references and appendix follow)
+        "PAGEBREAK": '```{=openxml}\n<w:p><w:r><w:br w:type="page"/></w:r></w:p>\n```',
     }
+
+
+def _restyle(xml, style_id, old, new):
+    """Replace `old` with `new` inside one <w:style> block of styles.xml (fails loudly if it isn't there)."""
+    m = re.search(r'<w:style [^>]*w:styleId="%s".*?</w:style>' % style_id, xml, re.S)
+    assert m and old in m.group(0), (style_id, old)
+    return xml[:m.start()] + m.group(0).replace(old, new) + xml[m.end():]
+
+
+def reference_docx(path):
+    """Word styles for the report: pandoc's default reference.docx with 11 pt text, 9 pt tables, 10 pt captions,
+    tighter spacing, smaller headings, and US Letter pages with 2 cm margins (the report has a 2-page limit)."""
+    default = subprocess.run(["pandoc", "--print-default-data-file", "reference.docx"], check=True, capture_output=True).stdout
+    src = path + ".default"
+    open(src, "wb").write(default)
+    with zipfile.ZipFile(src) as z:
+        files = {n: z.read(n) for n in z.namelist()}
+    s = files["word/styles.xml"].decode()
+    s = re.sub(r"(<w:rPrDefault>.*?)w:val=\"24\"(.*?)w:val=\"24\"", r'\1w:val="22"\2w:val="22"', s, flags=re.S)  # 11 pt
+    s = _restyle(s, "BodyText", 'w:before="180" w:after="180"', 'w:before="0" w:after="100"')
+    s = _restyle(s, "Compact", 'w:before="36" w:after="36"', 'w:before="0" w:after="20"')
+    # font sizes in half-points: title 28 -> 16 pt, heading 1 20 -> 13 pt, heading 2 16 -> 11 pt
+    for sid, old, new in [("Title", "56", "32"), ("Heading1", "40", "26"), ("Heading2", "32", "22")]:
+        s = re.sub(r'(w:styleId="%s".*?)<w:sz w:val="%s" />\s*<w:szCs w:val="%s" />' % (sid, old, old),
+                   r'\1<w:sz w:val="%s" /><w:szCs w:val="%s" />' % (new, new), s, count=1, flags=re.S)
+    s = _restyle(s, "Heading1", 'w:before="360" w:after="80"', 'w:before="140" w:after="40"')
+    s = _restyle(s, "Caption", "<w:i />", '<w:i /><w:sz w:val="20" /><w:szCs w:val="20" />')
+    s = _restyle(s, "Table", "<w:tblPr>", '<w:rPr><w:sz w:val="18" /><w:szCs w:val="18" /></w:rPr><w:tblPr>')
+    files["word/styles.xml"] = s.encode()
+    # theme fonts Aptos -> Calibri (narrower, so more text fits per page)
+    files["word/theme/theme1.xml"] = files["word/theme/theme1.xml"].decode() \
+        .replace('typeface="Aptos Display"', 'typeface="Calibri"').replace('typeface="Aptos"', 'typeface="Calibri"').encode()
+    d = files["word/document.xml"].decode()
+    page = ('<w:pgSz w:w="12240" w:h="15840" /><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" '
+            'w:header="567" w:footer="567" w:gutter="0" />')
+    d = re.sub(r"(<w:sectPr>.*?</w:footnotePr>)", r"\1" + page, d, count=1, flags=re.S)
+    files["word/document.xml"] = d.encode()
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
+        for n, b in files.items():
+            z.writestr(n, b)
+    os.remove(src)
 
 
 def main():
@@ -243,13 +330,11 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     md_path = f"{OUT}/progress_report.md"
     open(md_path, "w").write(text)
-    subprocess.run(["pandoc", md_path, "-o", f"{OUT}/progress_report.docx", f"--resource-path={OUT}"], check=True)
-    # copy the plain-language hypothesis notes (report section 5) into results/summary.md
-    notes = text.split("# 5. What the results suggest so far", 1)[1].split("\n# 6.", 1)[0]
-    summ = open(f"{R}/summary.md").read()
-    summ = summ.split("## Notes on hypotheses")[0] + "## Notes on hypotheses (preliminary; copied from the report, section 5)\n" + notes
-    open(f"{R}/summary.md", "w").write(summ)
-    print("wrote", md_path, "and progress_report.docx; updated summary.md notes")
+    ref = f"{OUT}/reference.docx"
+    reference_docx(ref)
+    subprocess.run(["pandoc", md_path, "-o", f"{OUT}/progress_report.docx", f"--resource-path={OUT}",
+                    f"--reference-doc={ref}"], check=True)
+    print("wrote", md_path, "and progress_report.docx")
 
 
 if __name__ == "__main__":
