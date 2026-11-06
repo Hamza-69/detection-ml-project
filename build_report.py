@@ -99,6 +99,34 @@ def table_labels(S, variant):
                                           "Macro-ECE after T", "Macro-ECE after Platt", "T", "Macro-Brier", "Sensitivity @0.5", "Specificity @0.5"]))
 
 
+def table_labels_all(S):
+    """Compact main-text table: both pos_weight settings, mean ± SD over seeds."""
+    rows = []
+    for variant, vname in [("pw", "yes"), ("nopw", "no")]:
+        for lab in LABELS:
+            g = cnn(S, variant, lab)
+            if not len(g):
+                continue
+            rows.append([lab, vname, pm(g.macro_auroc), pm(g.macro_auroc_within_abnormal), pm(g.macro_ece, 4),
+                         pm(g.macro_ece_T, 4), pm(g.macro_ece_platt, 4), pm(g.macro_brier, 4),
+                         pm(g["macro_sens@0.5"], 2), pm(g["macro_spec@0.5"], 3)])
+    return md(pd.DataFrame(rows, columns=["Labels", "pos_weight", "Macro-AUROC", "AUROC abn. only", "ECE", "ECE after T",
+                                          "ECE after Platt", "Brier", "Sens. @0.5", "Spec. @0.5"]))
+
+
+def table_dis_compact(S):
+    rows = []
+    for variant, vname in [("pw", "yes"), ("nopw", "no")]:
+        for lab in LABELS:
+            g = cnn(S, variant, lab)
+            if not len(g):
+                continue
+            rows.append([lab, vname, *[f(g[f"dis_mean_p_{v}of3"].mean()) for v in (1, 2, 3)],
+                         pm(g.dis_mae_vs_soft_splitvote), pm(g.dis_ece_vs_soft, 4), pm(g.dis_spearman_marked)])
+    return md(pd.DataFrame(rows, columns=["Labels", "pos_weight", "p̄ @1/3", "p̄ @2/3", "p̄ @3/3",
+                                          "mean abs(p − k/3), split votes", "ECE vs reader fraction", "Spearman (marked)"]))
+
+
 def table_diffs(D, variant):
     d = D[D.variant == variant]
     if not len(d):
@@ -204,7 +232,7 @@ def context():
         "T_LADDER": table_ladder(S, L), "T_CI": table_ci(S),
         "T_LABELS_PW": table_labels(S, "pw"), "T_LABELS_NOPW": table_labels(S, "nopw"),
         "T_DIFF_PW": table_diffs(D, "pw"), "T_DIFF_NOPW": table_diffs(D, "nopw"),
-        "T_DIS": table_disagreement(S), "T_YOLO": table_yolo(Y), "T_COMPLEX": table_complexity(S, BT, CT, YR, RUNS),
+        "T_DIS": table_disagreement(S), "T_LABELS_ALL": table_labels_all(S), "T_DIS_COMPACT": table_dis_compact(S), "T_YOLO": table_yolo(Y), "T_COMPLEX": table_complexity(S, BT, CT, YR, RUNS),
     }
 
 

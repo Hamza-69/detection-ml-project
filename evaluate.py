@@ -252,6 +252,28 @@ def fig_h2(summary, path, suffix="", variant="pw"):
     fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
 
 
+def fig_h2_both(summary, path):
+    """H2 plot, two panels: with and without pos_weight (mean over seeds, band = range over seeds)."""
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.2), sharey=True)
+    for ax, variant, title in [(axes[0], "pw", "with pos_weight"), (axes[1], "nopw", "without pos_weight")]:
+        for lbl in ["majority", "soft", "union"]:
+            rows = summary[(summary.kind == "cnn") & (summary.labels == lbl) & (summary.variant == variant)]
+            if len(rows) == 0:
+                continue
+            cols = [f"dis_mean_p_{v}of3" for v in range(4)]
+            ax.plot(range(4), rows[cols].mean().values, "o-", color=COLORS[lbl], label=f"CNN {lbl}")
+            ax.fill_between(range(4), rows[cols].min().values, rows[cols].max().values, color=COLORS[lbl], alpha=0.15)
+        ax.plot(range(4), [0, 1 / 3, 2 / 3, 1], "k--", lw=1, label="reader fraction")
+        ax.set_xticks(range(4), ["0/3", "1/3", "2/3", "3/3"])
+        ax.set_xlabel("readers who marked the finding")
+        ax.set_title(title, fontsize=10)
+        ax.set_ylim(0, 1)
+    axes[0].set_ylabel("mean predicted probability")
+    axes[0].legend(fontsize=8)
+    fig.suptitle("Disagreement set: predicted probability vs reader agreement (14 findings pooled, 3 seeds)", fontsize=10)
+    fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
+
+
 def fig_ladder(per, cnn_names, base_name, counts, path):
     cnn = per[per.model.isin(cnn_names)].groupby("target").auroc.mean()
     base = per[per.model == base_name].set_index("target").auroc
@@ -384,6 +406,7 @@ def main():
         if ((S.kind == "cnn") & (S.variant == variant)).any():
             fig_h2(S, f"{R}/fig_h2_disagreement{sfx}.png", variant=variant)
             fig_h2(S, f"{R}/fig_h2_disagreement{sfx}_T.png", suffix="_T", variant=variant)
+    fig_h2_both(S, f"{R}/fig_h2_both.png")
     counts = pd.read_csv(f"{R}/split_counts.csv", index_col=0)["train"].to_dict()
     maj_names = [n for n, m in models.items() if m["kind"] == "cnn" and m["labels"] == "majority" and m["variant"] == "pw"]
     if maj_names and "baseline_logreg" in models:
