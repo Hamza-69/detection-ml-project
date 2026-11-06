@@ -131,6 +131,9 @@ def evaluate_model(name, m, lab, votes, boot_idx):
 
     aucs = per_class(auc, P, Y, range(15))
     macro = np.nanmean(aucs[:14])
+    # AUROC among abnormal images only: can the model tell WHICH finding is present, not just normal vs abnormal?
+    abn = Y[:, 14] == 1
+    aucs_abn = np.array([auc(Y[abn, k], P[abn, k]) for k in ks])
     ci_macro = boot_ci(lambda ix: np.nanmean([auc(Y[ix, k], P[ix, k]) for k in ks]), len(Y), boot_idx)
     ci_abn = boot_ci(lambda ix: auc(Y[ix, 14], P[ix, 14]), len(Y), boot_idx)
     eces = per_class(ece, P, Y, range(15))
@@ -158,6 +161,7 @@ def evaluate_model(name, m, lab, votes, boot_idx):
         "model": name, "kind": m["kind"], "labels": m["labels"], "seed": m["seed"], "variant": m["variant"],
         "macro_auroc": macro, "macro_auroc_lo": ci_macro[0], "macro_auroc_hi": ci_macro[1],
         "abnormal_auroc": aucs[14], "abnormal_auroc_lo": ci_abn[0], "abnormal_auroc_hi": ci_abn[1],
+        "macro_auroc_within_abnormal": np.nanmean(aucs_abn),
         "macro_ece": eces[:14].mean(), "macro_ece_T": eces_T[:14].mean(),
         "abnormal_ece": eces[14], "abnormal_ece_T": eces_T[14],
         "macro_brier": briers[:14].mean(), "macro_brier_T": briers_T[:14].mean(), "T": T,
@@ -173,7 +177,8 @@ def evaluate_model(name, m, lab, votes, boot_idx):
         "dis_mae_vs_soft_splitvote": float(np.abs(dP - soft_t)[split_vote].mean()),
         "dis_mae_vs_soft_splitvote_T": float(np.abs(dPT - soft_t)[split_vote].mean()),
     }
-    per = pd.DataFrame({"model": name, "target": TARGETS, "auroc": aucs, "ece": eces, "ece_T": eces_T,
+    per = pd.DataFrame({"model": name, "target": TARGETS, "auroc": aucs,
+                        "auroc_within_abnormal": list(aucs_abn) + [np.nan], "ece": eces, "ece_T": eces_T,
                         "brier": briers, "sens@0.5": list(sens) + [np.nan], "spec@0.5": list(spec) + [np.nan]})
     return row, per, (P, PT, Y)
 
@@ -369,6 +374,12 @@ def main():
     if maj_names:
         ladder["cnn_majority"] = PER[PER.model.isin(maj_names)].groupby("target").auroc.mean()
         ladder["gain_vs_best_baseline"] = ladder.cnn_majority - ladder[[c for c in ladder.columns if c.startswith("baseline")]].max(1)
+    # same, restricted to abnormal test images (which finding, not whether abnormal)
+    lad_abn = PER[PER.model.isin(["baseline_logreg", "baseline_lgbm"])].pivot(index="target", columns="model", values="auroc_within_abnormal")
+    if maj_names:
+        lad_abn["cnn_majority"] = PER[PER.model.isin(maj_names)].groupby("target").auroc_within_abnormal.mean()
+    for c in lad_abn.columns:
+        ladder[f"{c}_within_abn"] = lad_abn[c]
     ladder["train_pos"] = [counts.get(t, np.nan) for t in ladder.index]
     ladder = ladder.loc[TARGETS]
     ladder.to_csv(f"{R}/tables/ladder_per_class.csv")
@@ -389,7 +400,9 @@ def write_summary(S, PER, DIFF, agg, ladder, timing, btime, yolo, models):
          "(Abnormal reported separately). CIs = 95% bootstrap over test images (1,000 resamples).", ""]
 
     # Table 1 ladder
-    L += ["## Table 1 - Model ladder: per-finding AUROC (internal test)", ""]
+    L += ["## Table 1 - Model ladder: per-finding AUROC (internal test)", "",
+          "Columns ending `_within_abn` = AUROC computed only on abnormal test images (majority label), i.e. "
+          "telling findings apart rather than normal vs abnormal.", ""]
     t1 = ladder.reset_index().rename(columns={"index": "target"})
     for c in t1.columns[1:]:
         t1[c] = t1[c].map(lambda v: fmt(v, 3) if c != "train_pos" else str(int(v)) if not np.isnan(v) else "–")
@@ -400,7 +413,8 @@ def write_summary(S, PER, DIFF, agg, ladder, timing, btime, yolo, models):
         base_rows["macro AUROC [95% CI]"] = base_rows.apply(lambda r: f"{r.macro_auroc:.3f} [{r.macro_auroc_lo:.3f}, {r.macro_auroc_hi:.3f}]", axis=1)
         base_rows["abnormal AUROC [95% CI]"] = base_rows.apply(lambda r: f"{r.abnormal_auroc:.3f} [{r.abnormal_auroc_lo:.3f}, {r.abnormal_auroc_hi:.3f}]", axis=1)
         base_rows["macro ECE"] = base_rows.macro_ece.map(fmt)
-        L += [md_table(base_rows, ["model", "macro AUROC [95% CI]", "abnormal AUROC [95% CI]", "macro ECE"]), ""]
+        base_rows["macro AUROC within abnormal"] = base_rows.macro_auroc_within_abnormal.map(fmt)
+        L += [md_table(base_rows, ["model", "macro AUROC [95% CI]", "macro AUROC within abnormal", "abnormal AUROC [95% CI]", "macro ECE"]), ""]
     L += ["Figure: `results/fig_ladder_auroc.png`", ""]
 
     # Table 2 label strategies, each run
@@ -410,12 +424,13 @@ def write_summary(S, PER, DIFF, agg, ladder, timing, btime, yolo, models):
             continue
         rows["macro AUROC [95% CI]"] = rows.apply(lambda r: f"{r.macro_auroc:.3f} [{r.macro_auroc_lo:.3f}, {r.macro_auroc_hi:.3f}]", axis=1)
         rows["abnormal AUROC"] = rows.abnormal_auroc.map(fmt)
+        rows["within-abn AUROC"] = rows.macro_auroc_within_abnormal.map(fmt)
         rows["macro ECE (before -> after T)"] = rows.apply(lambda r: f"{r.macro_ece:.4f} -> {r.macro_ece_T:.4f}", axis=1)
         rows["T"] = rows["T"].map(lambda v: fmt(v, 2))
         rows["macro Brier"] = rows.macro_brier.map(lambda v: fmt(v, 4))
         rows["macro sens / spec @0.5"] = rows.apply(lambda r: f"{r['macro_sens@0.5']:.3f} / {r['macro_spec@0.5']:.3f}", axis=1)
         L += [f"## Table 2{'a' if variant == 'pw' else 'b'} - Label strategies, CNN {title}", "",
-              md_table(rows, ["labels", "seed", "macro AUROC [95% CI]", "abnormal AUROC", "macro ECE (before -> after T)", "T",
+              md_table(rows, ["labels", "seed", "macro AUROC [95% CI]", "within-abn AUROC", "abnormal AUROC", "macro ECE (before -> after T)", "T",
                               "macro Brier", "macro sens / spec @0.5"]), ""]
         a = agg[agg.variant == variant].copy()
         for c in ["macro_auroc_mean", "macro_auroc_sd", "macro_ece_mean", "macro_ece_sd", "macro_ece_T_mean", "macro_ece_T_sd"]:
