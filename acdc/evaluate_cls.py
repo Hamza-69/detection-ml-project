@@ -118,6 +118,14 @@ def main():
         t = fit_temperature(cv[PCOLS].values, cv.group.map(ENC).values)
         pipes["cnn_ensemble+TS"] = (cv.assign(**dict(zip(PCOLS, apply_temperature(cv[PCOLS].values, t).T))),
                                     te.assign(**dict(zip(PCOLS, apply_temperature(te[PCOLS].values, t).T))))
+    if args.main in pipes and "cnn_ensemble" in pipes:
+        # hybrid: average of the two-stage pipeline and the end-to-end CNN ensemble (are their errors complementary?)
+        hyb = []
+        for a, b in zip(pipes[args.main], pipes["cnn_ensemble"]):
+            a, b = a.sort_values("pid").reset_index(drop=True), b.sort_values("pid").reset_index(drop=True)
+            assert (a.pid == b.pid).all()
+            hyb.append(a[["pid", "group"]].assign(**{c: (a[c] + b[c]) / 2 for c in PCOLS}))
+        pipes[f"hybrid ({args.main} + cnn_ensemble)"] = tuple(hyb)
     rows, cov = [], []
     for name, (cv, te) in pipes.items():
         for ev, d in (("cv", cv), ("test", te)):
