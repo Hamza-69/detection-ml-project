@@ -57,7 +57,7 @@ def summary(dfs):
 
 def per_patient(df, met):
     cols = [f"{met}_{s}" for s in STRUCT]
-    return df.groupby("pid")[cols].mean().mean(1)
+    return df.groupby("pid")[cols].mean().mean(axis=1)
 
 
 def paired_tests(dfs, ref):
@@ -123,8 +123,8 @@ def uncertainty(dfs):
             continue
         for ev in ("train", "test"):
             d = df[df.split == ev].copy()
-            d["mdice"] = d[[f"dice_{s}" for s in STRUCT]].mean(1)
-            d["fail"] = (d[[f"dice_{s}" for s in STRUCT]].min(1) < 0.8).astype(int)  # any structure below 0.80
+            d["mdice"] = d[[f"dice_{s}" for s in STRUCT]].mean(axis=1)
+            d["fail"] = (d[[f"dice_{s}" for s in STRUCT]].min(axis=1) < 0.8).astype(int)  # any structure below 0.80
             for score in ("ent_fg", "disagree"):
                 if score not in d or d[score].isna().all():
                     continue
@@ -176,7 +176,7 @@ def example_figure(ref):
     """Test patients with the best, median and worst mean Dice for the reference config: mid slice ED, GT vs prediction."""
     df = pd.read_csv(OUT / f"{ref}_metrics.csv")
     d = df[(df.split == "test") & (df.phase == "ED")].copy()
-    d["mdice"] = d[[f"dice_{s}" for s in STRUCT]].mean(1)
+    d["mdice"] = d[[f"dice_{s}" for s in STRUCT]].mean(axis=1)
     d = d.sort_values("mdice")
     picks = [d.iloc[-1], d.iloc[len(d) // 2], d.iloc[1], d.iloc[0]]
     cmap = matplotlib.colors.ListedColormap([(0, 0, 0, 0), (0.2, 0.5, 1, 0.5), (0.1, 0.8, 0.3, 0.5), (1, 0.3, 0.2, 0.5)])

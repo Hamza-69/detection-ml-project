@@ -1,0 +1,50 @@
+{
+  "folds": [
+    {
+      "fold": 0,
+      "n_pixels": 750007,
+      "best_iter": 345
+    },
+    {
+      "fold": 1,
+      "n_pixels": 747346,
+      "best_iter": 168
+    },
+    {
+      "fold": 2,
+      "n_pixels": 764700,
+      "best_iter": 104
+    },
+    {
+      "fold": 3,
+      "n_pixels": 761785,
+      "best_iter": 584
+    },
+    {
+      "fold": 4,
+      "n_pixels": 744668,
+      "best_iter": 159
+    }
+  ],
+  "train_minutes": 4.529443335533142,
+  "predict_minutes": 117.67463723421096,
+  "n_features": 27,
+  "params": {
+    "objective": "multiclass",
+    "num_class": 4,
+    "learning_rate": 0.05,
+    "num_leaves": 63,
+    "min_child_samples": 50,
+    "feature_fraction": 0.8,
+    "bagging_fraction": 0.8,
+    "bagging_freq": 1,
+    "lambda_l2": 1.0,
+    "verbose": -1
+  },
+  "prior_true": [
+    0.9630386666903814,
+    0.01204474072407418,
+    0.012479952540797902,
+    0.012436640044746561
+  ]
+}

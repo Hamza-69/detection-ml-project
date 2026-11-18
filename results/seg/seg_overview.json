@@ -1,0 +1,7 @@
+{
+  "classical_lgbm": {
+    "test_mean_dice": 0.6385326431211558,
+    "cv_mean_dice": 0.6425844667559583,
+    "test_mean_hd95": 19.800770230106746
+  }
+}
