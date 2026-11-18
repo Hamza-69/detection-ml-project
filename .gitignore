@@ -2,11 +2,22 @@ CLAUDE.md
 .venv/
 __pycache__/
 *.pyc
-deploy/models/
-yolov8s.pt
+.DS_Store
 .gradio/
 exports/
 local_results/
+
+# VinDr-CXR (milestone 2) artefacts
+vindr/deploy/models/
+yolov8s.pt
+
+# ACDC: model weights and large arrays stay out of git (published as release assets instead)
+*.pt
+*.pth
+*.npz
+*.npy
+deploy/models/
+results/**/preds/
 
 # report renderer: not in the GitHub repo, shared with the project folder (see REPORT_RENDERING.md, also ignored)
 build_report.py

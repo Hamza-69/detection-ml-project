@@ -1,0 +1,121 @@
+{
+  "n_patients": 150,
+  "n_train": 100,
+  "n_test": 50,
+  "per_group": {
+    "train": {
+      "DCM": 20,
+      "HCM": 20,
+      "MINF": 20,
+      "NOR": 20,
+      "RV": 20
+    },
+    "test": {
+      "DCM": 10,
+      "NOR": 10,
+      "MINF": 10,
+      "HCM": 10,
+      "RV": 10
+    }
+  },
+  "per_fold_group": {
+    "0": {
+      "DCM": 4,
+      "HCM": 4,
+      "MINF": 4,
+      "NOR": 4,
+      "RV": 4
+    },
+    "1": {
+      "DCM": 4,
+      "HCM": 4,
+      "MINF": 4,
+      "NOR": 4,
+      "RV": 4
+    },
+    "2": {
+      "DCM": 4,
+      "HCM": 4,
+      "MINF": 4,
+      "NOR": 4,
+      "RV": 4
+    },
+    "3": {
+      "DCM": 4,
+      "HCM": 4,
+      "MINF": 4,
+      "NOR": 4,
+      "RV": 4
+    },
+    "4": {
+      "DCM": 4,
+      "HCM": 4,
+      "MINF": 4,
+      "NOR": 4,
+      "RV": 4
+    }
+  },
+  "n_slices_total_per_phase": 1489,
+  "slices_min_median_max": [
+    6,
+    9.5,
+    21
+  ],
+  "inplane_spacing_min_median_max": [
+    0.703125,
+    1.5234400033950806,
+    1.9531199932098389
+  ],
+  "slice_thickness_min_median_max": [
+    5.0,
+    10.0,
+    10.0
+  ],
+  "gt_indices_mean_by_group": {
+    "DCM": {
+      "gt_LV_EDV": 283.1,
+      "gt_LV_ESV": 228.6,
+      "gt_LV_EF": 19.8,
+      "gt_RV_EDV": 182.4,
+      "gt_RV_ESV": 124.8,
+      "gt_RV_EF": 33.6,
+      "gt_MYO_mass": 165.6
+    },
+    "HCM": {
+      "gt_LV_EDV": 132.1,
+      "gt_LV_ESV": 39.8,
+      "gt_LV_EF": 69.8,
+      "gt_RV_EDV": 123.3,
+      "gt_RV_ESV": 49.0,
+      "gt_RV_EF": 59.4,
+      "gt_MYO_mass": 175.0
+    },
+    "MINF": {
+      "gt_LV_EDV": 180.7,
+      "gt_LV_ESV": 125.8,
+      "gt_LV_EF": 30.8,
+      "gt_RV_EDV": 124.9,
+      "gt_RV_ESV": 59.2,
+      "gt_RV_EF": 53.4,
+      "gt_MYO_mass": 133.6
+    },
+    "NOR": {
+      "gt_LV_EDV": 129.9,
+      "gt_LV_ESV": 49.3,
+      "gt_LV_EF": 62.4,
+      "gt_RV_EDV": 148.6,
+      "gt_RV_ESV": 70.2,
+      "gt_RV_EF": 52.6,
+      "gt_MYO_mass": 99.6
+    },
+    "RV": {
+      "gt_LV_EDV": 117.1,
+      "gt_LV_ESV": 51.0,
+      "gt_LV_EF": 56.5,
+      "gt_RV_EDV": 216.6,
+      "gt_RV_ESV": 139.9,
+      "gt_RV_EF": 34.3,
+      "gt_MYO_mass": 82.3
+    }
+  }
+}
