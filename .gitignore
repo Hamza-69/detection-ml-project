@@ -7,3 +7,8 @@ yolov8s.pt
 .gradio/
 exports/
 local_results/
+
+# report renderer: not in the GitHub repo, shared with the project folder (see REPORT_RENDERING.md, also ignored)
+build_report.py
+report/
+REPORT_RENDERING.md
