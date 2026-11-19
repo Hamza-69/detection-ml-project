@@ -1,0 +1,441 @@
+pipeline,eval,coverage,acc
+image->image logreg,cv,0.5,0.46
+image->image logreg,cv,0.55,0.45454545454545453
+image->image logreg,cv,0.6,0.4666666666666667
+image->image logreg,cv,0.65,0.4461538461538462
+image->image logreg,cv,0.7,0.45714285714285713
+image->image logreg,cv,0.75,0.4266666666666667
+image->image logreg,cv,0.8,0.4375
+image->image logreg,cv,0.8500000000000001,0.4117647058823529
+image->image logreg,cv,0.9,0.4
+image->image logreg,cv,0.95,0.43157894736842106
+image->image logreg,cv,1.0,0.43
+image->image logreg,test,0.5,0.64
+image->image logreg,test,0.55,0.6071428571428571
+image->image logreg,test,0.6,0.6333333333333333
+image->image logreg,test,0.65,0.625
+image->image logreg,test,0.7,0.6
+image->image logreg,test,0.75,0.6052631578947368
+image->image logreg,test,0.8,0.6
+image->image logreg,test,0.8500000000000001,0.5581395348837209
+image->image logreg,test,0.9,0.5333333333333333
+image->image logreg,test,0.95,0.5
+image->image logreg,test,1.0,0.48
+image->image rf,cv,0.5,0.48
+image->image rf,cv,0.55,0.4909090909090909
+image->image rf,cv,0.6,0.5
+image->image rf,cv,0.65,0.47692307692307695
+image->image rf,cv,0.7,0.45714285714285713
+image->image rf,cv,0.75,0.4533333333333333
+image->image rf,cv,0.8,0.45
+image->image rf,cv,0.8500000000000001,0.43529411764705883
+image->image rf,cv,0.9,0.43333333333333335
+image->image rf,cv,0.95,0.42105263157894735
+image->image rf,cv,1.0,0.41
+image->image rf,test,0.5,0.6
+image->image rf,test,0.55,0.5714285714285714
+image->image rf,test,0.6,0.5666666666666667
+image->image rf,test,0.65,0.5625
+image->image rf,test,0.7,0.5142857142857142
+image->image rf,test,0.75,0.5263157894736842
+image->image rf,test,0.8,0.55
+image->image rf,test,0.8500000000000001,0.5581395348837209
+image->image rf,test,0.9,0.5777777777777777
+image->image rf,test,0.95,0.5416666666666666
+image->image rf,test,1.0,0.52
+gt->gt logreg,cv,0.5,1.0
+gt->gt logreg,cv,0.55,1.0
+gt->gt logreg,cv,0.6,1.0
+gt->gt logreg,cv,0.65,1.0
+gt->gt logreg,cv,0.7,1.0
+gt->gt logreg,cv,0.75,1.0
+gt->gt logreg,cv,0.8,1.0
+gt->gt logreg,cv,0.8500000000000001,1.0
+gt->gt logreg,cv,0.9,1.0
+gt->gt logreg,cv,0.95,0.9894736842105263
+gt->gt logreg,cv,1.0,0.97
+gt->gt logreg,test,0.5,0.96
+gt->gt logreg,test,0.55,0.9642857142857143
+gt->gt logreg,test,0.6,0.9666666666666667
+gt->gt logreg,test,0.65,0.96875
+gt->gt logreg,test,0.7,0.9714285714285714
+gt->gt logreg,test,0.75,0.9736842105263158
+gt->gt logreg,test,0.8,0.975
+gt->gt logreg,test,0.8500000000000001,0.9767441860465116
+gt->gt logreg,test,0.9,0.9777777777777777
+gt->gt logreg,test,0.95,0.9791666666666666
+gt->gt logreg,test,1.0,0.96
+gt->gt rf,cv,0.5,0.98
+gt->gt rf,cv,0.55,0.9818181818181818
+gt->gt rf,cv,0.6,0.9833333333333333
+gt->gt rf,cv,0.65,0.9846153846153847
+gt->gt rf,cv,0.7,0.9857142857142858
+gt->gt rf,cv,0.75,0.9733333333333334
+gt->gt rf,cv,0.8,0.9625
+gt->gt rf,cv,0.8500000000000001,0.9529411764705882
+gt->gt rf,cv,0.9,0.9555555555555556
+gt->gt rf,cv,0.95,0.9473684210526315
+gt->gt rf,cv,1.0,0.94
+gt->gt rf,test,0.5,0.96
+gt->gt rf,test,0.55,0.9642857142857143
+gt->gt rf,test,0.6,0.9666666666666667
+gt->gt rf,test,0.65,0.96875
+gt->gt rf,test,0.7,0.9714285714285714
+gt->gt rf,test,0.75,0.9473684210526315
+gt->gt rf,test,0.8,0.95
+gt->gt rf,test,0.8500000000000001,0.9302325581395349
+gt->gt rf,test,0.9,0.9333333333333333
+gt->gt rf,test,0.95,0.9375
+gt->gt rf,test,1.0,0.9
+gt->unet2d logreg,cv,0.5,1.0
+gt->unet2d logreg,cv,0.55,0.9818181818181818
+gt->unet2d logreg,cv,0.6,0.9833333333333333
+gt->unet2d logreg,cv,0.65,0.9846153846153847
+gt->unet2d logreg,cv,0.7,0.9714285714285714
+gt->unet2d logreg,cv,0.75,0.9466666666666667
+gt->unet2d logreg,cv,0.8,0.95
+gt->unet2d logreg,cv,0.8500000000000001,0.9529411764705882
+gt->unet2d logreg,cv,0.9,0.9333333333333333
+gt->unet2d logreg,cv,0.95,0.9052631578947369
+gt->unet2d logreg,cv,1.0,0.91
+gt->unet2d logreg,test,0.5,0.96
+gt->unet2d logreg,test,0.55,0.9642857142857143
+gt->unet2d logreg,test,0.6,0.9666666666666667
+gt->unet2d logreg,test,0.65,0.96875
+gt->unet2d logreg,test,0.7,0.9714285714285714
+gt->unet2d logreg,test,0.75,0.9736842105263158
+gt->unet2d logreg,test,0.8,0.975
+gt->unet2d logreg,test,0.8500000000000001,0.9534883720930233
+gt->unet2d logreg,test,0.9,0.9333333333333333
+gt->unet2d logreg,test,0.95,0.9166666666666666
+gt->unet2d logreg,test,1.0,0.92
+gt->unet2d rf,cv,0.5,0.98
+gt->unet2d rf,cv,0.55,0.9636363636363636
+gt->unet2d rf,cv,0.6,0.9666666666666667
+gt->unet2d rf,cv,0.65,0.9538461538461539
+gt->unet2d rf,cv,0.7,0.9571428571428572
+gt->unet2d rf,cv,0.75,0.9466666666666667
+gt->unet2d rf,cv,0.8,0.9375
+gt->unet2d rf,cv,0.8500000000000001,0.9294117647058824
+gt->unet2d rf,cv,0.9,0.9333333333333333
+gt->unet2d rf,cv,0.95,0.9263157894736842
+gt->unet2d rf,cv,1.0,0.89
+gt->unet2d rf,test,0.5,0.96
+gt->unet2d rf,test,0.55,0.9642857142857143
+gt->unet2d rf,test,0.6,0.9666666666666667
+gt->unet2d rf,test,0.65,0.96875
+gt->unet2d rf,test,0.7,0.9714285714285714
+gt->unet2d rf,test,0.75,0.9473684210526315
+gt->unet2d rf,test,0.8,0.95
+gt->unet2d rf,test,0.8500000000000001,0.9302325581395349
+gt->unet2d rf,test,0.9,0.9333333333333333
+gt->unet2d rf,test,0.95,0.9375
+gt->unet2d rf,test,1.0,0.94
+unet2d->unet2d logreg,cv,0.5,1.0
+unet2d->unet2d logreg,cv,0.55,1.0
+unet2d->unet2d logreg,cv,0.6,1.0
+unet2d->unet2d logreg,cv,0.65,0.9846153846153847
+unet2d->unet2d logreg,cv,0.7,0.9857142857142858
+unet2d->unet2d logreg,cv,0.75,0.9866666666666667
+unet2d->unet2d logreg,cv,0.8,0.9875
+unet2d->unet2d logreg,cv,0.8500000000000001,0.9882352941176471
+unet2d->unet2d logreg,cv,0.9,0.9777777777777777
+unet2d->unet2d logreg,cv,0.95,0.9578947368421052
+unet2d->unet2d logreg,cv,1.0,0.92
+unet2d->unet2d logreg,test,0.5,0.96
+unet2d->unet2d logreg,test,0.55,0.9642857142857143
+unet2d->unet2d logreg,test,0.6,0.9666666666666667
+unet2d->unet2d logreg,test,0.65,0.96875
+unet2d->unet2d logreg,test,0.7,0.9714285714285714
+unet2d->unet2d logreg,test,0.75,0.9736842105263158
+unet2d->unet2d logreg,test,0.8,0.975
+unet2d->unet2d logreg,test,0.8500000000000001,0.9767441860465116
+unet2d->unet2d logreg,test,0.9,0.9555555555555556
+unet2d->unet2d logreg,test,0.95,0.9583333333333334
+unet2d->unet2d logreg,test,1.0,0.94
+unet2d->unet2d rf,cv,0.5,0.96
+unet2d->unet2d rf,cv,0.55,0.9636363636363636
+unet2d->unet2d rf,cv,0.6,0.9666666666666667
+unet2d->unet2d rf,cv,0.65,0.9692307692307692
+unet2d->unet2d rf,cv,0.7,0.9714285714285714
+unet2d->unet2d rf,cv,0.75,0.9733333333333334
+unet2d->unet2d rf,cv,0.8,0.95
+unet2d->unet2d rf,cv,0.8500000000000001,0.9411764705882353
+unet2d->unet2d rf,cv,0.9,0.9333333333333333
+unet2d->unet2d rf,cv,0.95,0.9157894736842105
+unet2d->unet2d rf,cv,1.0,0.91
+unet2d->unet2d rf,test,0.5,0.96
+unet2d->unet2d rf,test,0.55,0.9642857142857143
+unet2d->unet2d rf,test,0.6,0.9666666666666667
+unet2d->unet2d rf,test,0.65,0.96875
+unet2d->unet2d rf,test,0.7,0.9714285714285714
+unet2d->unet2d rf,test,0.75,0.9473684210526315
+unet2d->unet2d rf,test,0.8,0.95
+unet2d->unet2d rf,test,0.8500000000000001,0.9302325581395349
+unet2d->unet2d rf,test,0.9,0.9333333333333333
+unet2d->unet2d rf,test,0.95,0.9166666666666666
+unet2d->unet2d rf,test,1.0,0.88
+gt->classical_lgbm logreg,cv,0.5,0.46
+gt->classical_lgbm logreg,cv,0.55,0.45454545454545453
+gt->classical_lgbm logreg,cv,0.6,0.4166666666666667
+gt->classical_lgbm logreg,cv,0.65,0.4307692307692308
+gt->classical_lgbm logreg,cv,0.7,0.4
+gt->classical_lgbm logreg,cv,0.75,0.4
+gt->classical_lgbm logreg,cv,0.8,0.3875
+gt->classical_lgbm logreg,cv,0.8500000000000001,0.3764705882352941
+gt->classical_lgbm logreg,cv,0.9,0.37777777777777777
+gt->classical_lgbm logreg,cv,0.95,0.35789473684210527
+gt->classical_lgbm logreg,cv,1.0,0.36
+gt->classical_lgbm logreg,test,0.5,0.48
+gt->classical_lgbm logreg,test,0.55,0.5
+gt->classical_lgbm logreg,test,0.6,0.4666666666666667
+gt->classical_lgbm logreg,test,0.65,0.4375
+gt->classical_lgbm logreg,test,0.7,0.42857142857142855
+gt->classical_lgbm logreg,test,0.75,0.42105263157894735
+gt->classical_lgbm logreg,test,0.8,0.4
+gt->classical_lgbm logreg,test,0.8500000000000001,0.37209302325581395
+gt->classical_lgbm logreg,test,0.9,0.37777777777777777
+gt->classical_lgbm logreg,test,0.95,0.375
+gt->classical_lgbm logreg,test,1.0,0.4
+gt->classical_lgbm rf,cv,0.5,0.6
+gt->classical_lgbm rf,cv,0.55,0.5818181818181818
+gt->classical_lgbm rf,cv,0.6,0.6
+gt->classical_lgbm rf,cv,0.65,0.5846153846153846
+gt->classical_lgbm rf,cv,0.7,0.5428571428571428
+gt->classical_lgbm rf,cv,0.75,0.5466666666666666
+gt->classical_lgbm rf,cv,0.8,0.55
+gt->classical_lgbm rf,cv,0.8500000000000001,0.5294117647058824
+gt->classical_lgbm rf,cv,0.9,0.5222222222222223
+gt->classical_lgbm rf,cv,0.95,0.49473684210526314
+gt->classical_lgbm rf,cv,1.0,0.52
+gt->classical_lgbm rf,test,0.5,0.56
+gt->classical_lgbm rf,test,0.55,0.5
+gt->classical_lgbm rf,test,0.6,0.4666666666666667
+gt->classical_lgbm rf,test,0.65,0.46875
+gt->classical_lgbm rf,test,0.7,0.45714285714285713
+gt->classical_lgbm rf,test,0.75,0.47368421052631576
+gt->classical_lgbm rf,test,0.8,0.475
+gt->classical_lgbm rf,test,0.8500000000000001,0.5116279069767442
+gt->classical_lgbm rf,test,0.9,0.5333333333333333
+gt->classical_lgbm rf,test,0.95,0.5208333333333334
+gt->classical_lgbm rf,test,1.0,0.54
+classical_lgbm->classical_lgbm logreg,cv,0.5,0.7
+classical_lgbm->classical_lgbm logreg,cv,0.55,0.7090909090909091
+classical_lgbm->classical_lgbm logreg,cv,0.6,0.7
+classical_lgbm->classical_lgbm logreg,cv,0.65,0.6923076923076923
+classical_lgbm->classical_lgbm logreg,cv,0.7,0.6857142857142857
+classical_lgbm->classical_lgbm logreg,cv,0.75,0.68
+classical_lgbm->classical_lgbm logreg,cv,0.8,0.675
+classical_lgbm->classical_lgbm logreg,cv,0.8500000000000001,0.6588235294117647
+classical_lgbm->classical_lgbm logreg,cv,0.9,0.6666666666666666
+classical_lgbm->classical_lgbm logreg,cv,0.95,0.6421052631578947
+classical_lgbm->classical_lgbm logreg,cv,1.0,0.62
+classical_lgbm->classical_lgbm logreg,test,0.5,0.68
+classical_lgbm->classical_lgbm logreg,test,0.55,0.6428571428571429
+classical_lgbm->classical_lgbm logreg,test,0.6,0.6333333333333333
+classical_lgbm->classical_lgbm logreg,test,0.65,0.65625
+classical_lgbm->classical_lgbm logreg,test,0.7,0.6
+classical_lgbm->classical_lgbm logreg,test,0.75,0.6052631578947368
+classical_lgbm->classical_lgbm logreg,test,0.8,0.6
+classical_lgbm->classical_lgbm logreg,test,0.8500000000000001,0.6046511627906976
+classical_lgbm->classical_lgbm logreg,test,0.9,0.6
+classical_lgbm->classical_lgbm logreg,test,0.95,0.6041666666666666
+classical_lgbm->classical_lgbm logreg,test,1.0,0.58
+classical_lgbm->classical_lgbm rf,cv,0.5,0.82
+classical_lgbm->classical_lgbm rf,cv,0.55,0.7818181818181819
+classical_lgbm->classical_lgbm rf,cv,0.6,0.7666666666666667
+classical_lgbm->classical_lgbm rf,cv,0.65,0.7230769230769231
+classical_lgbm->classical_lgbm rf,cv,0.7,0.7142857142857143
+classical_lgbm->classical_lgbm rf,cv,0.75,0.7066666666666667
+classical_lgbm->classical_lgbm rf,cv,0.8,0.6625
+classical_lgbm->classical_lgbm rf,cv,0.8500000000000001,0.6705882352941176
+classical_lgbm->classical_lgbm rf,cv,0.9,0.6666666666666666
+classical_lgbm->classical_lgbm rf,cv,0.95,0.6526315789473685
+classical_lgbm->classical_lgbm rf,cv,1.0,0.63
+classical_lgbm->classical_lgbm rf,test,0.5,0.68
+classical_lgbm->classical_lgbm rf,test,0.55,0.6785714285714286
+classical_lgbm->classical_lgbm rf,test,0.6,0.6666666666666666
+classical_lgbm->classical_lgbm rf,test,0.65,0.65625
+classical_lgbm->classical_lgbm rf,test,0.7,0.6285714285714286
+classical_lgbm->classical_lgbm rf,test,0.75,0.6052631578947368
+classical_lgbm->classical_lgbm rf,test,0.8,0.625
+classical_lgbm->classical_lgbm rf,test,0.8500000000000001,0.6511627906976745
+classical_lgbm->classical_lgbm rf,test,0.9,0.6222222222222222
+classical_lgbm->classical_lgbm rf,test,0.95,0.6041666666666666
+classical_lgbm->classical_lgbm rf,test,1.0,0.6
+cnn_s0,cv,0.5,0.94
+cnn_s0,cv,0.55,0.9272727272727272
+cnn_s0,cv,0.6,0.9
+cnn_s0,cv,0.65,0.8769230769230769
+cnn_s0,cv,0.7,0.8571428571428571
+cnn_s0,cv,0.75,0.8533333333333334
+cnn_s0,cv,0.8,0.8125
+cnn_s0,cv,0.8500000000000001,0.788235294117647
+cnn_s0,cv,0.9,0.7555555555555555
+cnn_s0,cv,0.95,0.7473684210526316
+cnn_s0,cv,1.0,0.74
+cnn_s0,test,0.5,0.96
+cnn_s0,test,0.55,0.9642857142857143
+cnn_s0,test,0.6,0.9333333333333333
+cnn_s0,test,0.65,0.9375
+cnn_s0,test,0.7,0.9428571428571428
+cnn_s0,test,0.75,0.9210526315789473
+cnn_s0,test,0.8,0.925
+cnn_s0,test,0.8500000000000001,0.9302325581395349
+cnn_s0,test,0.9,0.9111111111111111
+cnn_s0,test,0.95,0.875
+cnn_s0,test,1.0,0.84
+cnn_s1,cv,0.5,0.92
+cnn_s1,cv,0.55,0.9090909090909091
+cnn_s1,cv,0.6,0.9
+cnn_s1,cv,0.65,0.8769230769230769
+cnn_s1,cv,0.7,0.8571428571428571
+cnn_s1,cv,0.75,0.84
+cnn_s1,cv,0.8,0.8
+cnn_s1,cv,0.8500000000000001,0.788235294117647
+cnn_s1,cv,0.9,0.7555555555555555
+cnn_s1,cv,0.95,0.7263157894736842
+cnn_s1,cv,1.0,0.72
+cnn_s1,test,0.5,0.96
+cnn_s1,test,0.55,0.9642857142857143
+cnn_s1,test,0.6,0.9666666666666667
+cnn_s1,test,0.65,0.96875
+cnn_s1,test,0.7,0.9428571428571428
+cnn_s1,test,0.75,0.9473684210526315
+cnn_s1,test,0.8,0.925
+cnn_s1,test,0.8500000000000001,0.9069767441860465
+cnn_s1,test,0.9,0.9111111111111111
+cnn_s1,test,0.95,0.8958333333333334
+cnn_s1,test,1.0,0.86
+cnn_s2,cv,0.5,0.9
+cnn_s2,cv,0.55,0.9090909090909091
+cnn_s2,cv,0.6,0.9166666666666666
+cnn_s2,cv,0.65,0.9076923076923077
+cnn_s2,cv,0.7,0.9
+cnn_s2,cv,0.75,0.8666666666666667
+cnn_s2,cv,0.8,0.85
+cnn_s2,cv,0.8500000000000001,0.8235294117647058
+cnn_s2,cv,0.9,0.8
+cnn_s2,cv,0.95,0.7789473684210526
+cnn_s2,cv,1.0,0.74
+cnn_s2,test,0.5,0.92
+cnn_s2,test,0.55,0.9285714285714286
+cnn_s2,test,0.6,0.9333333333333333
+cnn_s2,test,0.65,0.9375
+cnn_s2,test,0.7,0.9428571428571428
+cnn_s2,test,0.75,0.9473684210526315
+cnn_s2,test,0.8,0.925
+cnn_s2,test,0.8500000000000001,0.9069767441860465
+cnn_s2,test,0.9,0.8888888888888888
+cnn_s2,test,0.95,0.8541666666666666
+cnn_s2,test,1.0,0.84
+cnn_s3,cv,0.5,0.94
+cnn_s3,cv,0.55,0.9272727272727272
+cnn_s3,cv,0.6,0.9333333333333333
+cnn_s3,cv,0.65,0.9076923076923077
+cnn_s3,cv,0.7,0.9142857142857143
+cnn_s3,cv,0.75,0.8666666666666667
+cnn_s3,cv,0.8,0.85
+cnn_s3,cv,0.8500000000000001,0.8117647058823529
+cnn_s3,cv,0.9,0.8111111111111111
+cnn_s3,cv,0.95,0.8
+cnn_s3,cv,1.0,0.79
+cnn_s3,test,0.5,0.96
+cnn_s3,test,0.55,0.9642857142857143
+cnn_s3,test,0.6,0.9666666666666667
+cnn_s3,test,0.65,0.96875
+cnn_s3,test,0.7,0.9428571428571428
+cnn_s3,test,0.75,0.9210526315789473
+cnn_s3,test,0.8,0.925
+cnn_s3,test,0.8500000000000001,0.8837209302325582
+cnn_s3,test,0.9,0.8888888888888888
+cnn_s3,test,0.95,0.875
+cnn_s3,test,1.0,0.86
+cnn_s4,cv,0.5,0.96
+cnn_s4,cv,0.55,0.9454545454545454
+cnn_s4,cv,0.6,0.9166666666666666
+cnn_s4,cv,0.65,0.8769230769230769
+cnn_s4,cv,0.7,0.8714285714285714
+cnn_s4,cv,0.75,0.8533333333333334
+cnn_s4,cv,0.8,0.825
+cnn_s4,cv,0.8500000000000001,0.788235294117647
+cnn_s4,cv,0.9,0.7666666666666667
+cnn_s4,cv,0.95,0.7473684210526316
+cnn_s4,cv,1.0,0.73
+cnn_s4,test,0.5,0.96
+cnn_s4,test,0.55,0.9642857142857143
+cnn_s4,test,0.6,0.9666666666666667
+cnn_s4,test,0.65,0.96875
+cnn_s4,test,0.7,0.9428571428571428
+cnn_s4,test,0.75,0.9473684210526315
+cnn_s4,test,0.8,0.95
+cnn_s4,test,0.8500000000000001,0.9302325581395349
+cnn_s4,test,0.9,0.8888888888888888
+cnn_s4,test,0.95,0.875
+cnn_s4,test,1.0,0.84
+cnn_ensemble,cv,0.5,0.96
+cnn_ensemble,cv,0.55,0.9454545454545454
+cnn_ensemble,cv,0.6,0.9166666666666666
+cnn_ensemble,cv,0.65,0.9076923076923077
+cnn_ensemble,cv,0.7,0.8857142857142857
+cnn_ensemble,cv,0.75,0.84
+cnn_ensemble,cv,0.8,0.8125
+cnn_ensemble,cv,0.8500000000000001,0.8235294117647058
+cnn_ensemble,cv,0.9,0.8
+cnn_ensemble,cv,0.95,0.7789473684210526
+cnn_ensemble,cv,1.0,0.75
+cnn_ensemble,test,0.5,0.96
+cnn_ensemble,test,0.55,0.9642857142857143
+cnn_ensemble,test,0.6,0.9666666666666667
+cnn_ensemble,test,0.65,0.9375
+cnn_ensemble,test,0.7,0.9428571428571428
+cnn_ensemble,test,0.75,0.9473684210526315
+cnn_ensemble,test,0.8,0.95
+cnn_ensemble,test,0.8500000000000001,0.9069767441860465
+cnn_ensemble,test,0.9,0.8666666666666667
+cnn_ensemble,test,0.95,0.875
+cnn_ensemble,test,1.0,0.86
+cnn_ensemble+TS,cv,0.5,0.96
+cnn_ensemble+TS,cv,0.55,0.9454545454545454
+cnn_ensemble+TS,cv,0.6,0.9166666666666666
+cnn_ensemble+TS,cv,0.65,0.9076923076923077
+cnn_ensemble+TS,cv,0.7,0.9
+cnn_ensemble+TS,cv,0.75,0.8533333333333334
+cnn_ensemble+TS,cv,0.8,0.825
+cnn_ensemble+TS,cv,0.8500000000000001,0.8117647058823529
+cnn_ensemble+TS,cv,0.9,0.7888888888888889
+cnn_ensemble+TS,cv,0.95,0.7789473684210526
+cnn_ensemble+TS,cv,1.0,0.75
+cnn_ensemble+TS,test,0.5,0.96
+cnn_ensemble+TS,test,0.55,0.9642857142857143
+cnn_ensemble+TS,test,0.6,0.9666666666666667
+cnn_ensemble+TS,test,0.65,0.96875
+cnn_ensemble+TS,test,0.7,0.9428571428571428
+cnn_ensemble+TS,test,0.75,0.9473684210526315
+cnn_ensemble+TS,test,0.8,0.925
+cnn_ensemble+TS,test,0.8500000000000001,0.9069767441860465
+cnn_ensemble+TS,test,0.9,0.8666666666666667
+cnn_ensemble+TS,test,0.95,0.875
+cnn_ensemble+TS,test,1.0,0.86
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.5,1.0
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.55,0.9818181818181818
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.6,0.9833333333333333
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.65,0.9692307692307692
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.7,0.9714285714285714
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.75,0.96
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.8,0.9375
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.8500000000000001,0.9411764705882353
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.9,0.9444444444444444
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,0.95,0.9368421052631579
+hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,1.0,0.93
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.5,1.0
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.55,1.0
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.6,1.0
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.65,1.0
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.7,0.9714285714285714
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.75,0.9736842105263158
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.8,0.975
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.8500000000000001,0.9767441860465116
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.9,0.9777777777777777
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,0.95,0.9583333333333334
+hybrid (unet2d->unet2d logreg + cnn_ensemble),test,1.0,0.96

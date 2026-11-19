@@ -1,0 +1,23 @@
+{
+  "seed": 0,
+  "n": 50,
+  "all": {
+    "energy_in_heart": 0.23237925678491592,
+    "heart_area": 0.08169790638280426,
+    "enrichment": 2.8419225495928235,
+    "pointing_game": 0.96,
+    "energy_on_heart_slices": 0.976527134180069
+  },
+  "wrong": {
+    "n": 8,
+    "energy_in_heart": 0.1938401237130165,
+    "enrichment": 2.501108207799782,
+    "pointing_game": 0.75
+  },
+  "correct": {
+    "n": 42,
+    "energy_in_heart": 0.2397200440367063,
+    "enrichment": 2.906839567077212,
+    "pointing_game": 1.0
+  }
+}

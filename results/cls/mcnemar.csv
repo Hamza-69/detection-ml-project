@@ -1,0 +1,39 @@
+ref,other,eval,ref_right_other_wrong,ref_wrong_other_right,mcnemar_p
+unet2d->unet2d logreg,image->image logreg,cv,51,2,3.1796787425264483e-13
+unet2d->unet2d logreg,image->image logreg,test,23,0,2.384185791015625e-07
+unet2d->unet2d logreg,image->image rf,cv,52,1,1.199040866595169e-14
+unet2d->unet2d logreg,image->image rf,test,21,0,9.5367431640625e-07
+unet2d->unet2d logreg,gt->gt logreg,cv,1,6,0.125
+unet2d->unet2d logreg,gt->gt logreg,test,1,2,1.0
+unet2d->unet2d logreg,gt->gt rf,cv,3,5,0.7265625
+unet2d->unet2d logreg,gt->gt rf,test,3,1,0.625
+unet2d->unet2d logreg,gt->unet2d logreg,cv,3,2,1.0
+unet2d->unet2d logreg,gt->unet2d logreg,test,3,2,1.0
+unet2d->unet2d logreg,gt->unet2d rf,cv,8,5,0.5810546875
+unet2d->unet2d logreg,gt->unet2d rf,test,1,1,1.0
+unet2d->unet2d logreg,unet2d->unet2d rf,cv,5,4,1.0
+unet2d->unet2d logreg,unet2d->unet2d rf,test,3,0,0.25
+unet2d->unet2d logreg,gt->classical_lgbm logreg,cv,59,3,1.724922288337538e-14
+unet2d->unet2d logreg,gt->classical_lgbm logreg,test,28,1,1.1175870895385742e-07
+unet2d->unet2d logreg,gt->classical_lgbm rf,cv,44,4,1.5138326148189662e-09
+unet2d->unet2d logreg,gt->classical_lgbm rf,test,21,1,1.0967254638671875e-05
+unet2d->unet2d logreg,classical_lgbm->classical_lgbm logreg,cv,32,2,6.938353180885315e-08
+unet2d->unet2d logreg,classical_lgbm->classical_lgbm logreg,test,19,1,4.00543212890625e-05
+unet2d->unet2d logreg,classical_lgbm->classical_lgbm rf,cv,31,2,1.3085082173347473e-07
+unet2d->unet2d logreg,classical_lgbm->classical_lgbm rf,test,17,0,1.52587890625e-05
+unet2d->unet2d logreg,cnn_s0,cv,20,2,0.00012111663818359375
+unet2d->unet2d logreg,cnn_s0,test,7,2,0.1796875
+unet2d->unet2d logreg,cnn_s1,cv,22,2,3.5881996154785156e-05
+unet2d->unet2d logreg,cnn_s1,test,7,3,0.34375
+unet2d->unet2d logreg,cnn_s2,cv,21,3,0.0002771615982055664
+unet2d->unet2d logreg,cnn_s2,test,7,2,0.1796875
+unet2d->unet2d logreg,cnn_s3,cv,17,4,0.007197380065917969
+unet2d->unet2d logreg,cnn_s3,test,6,2,0.2890625
+unet2d->unet2d logreg,cnn_s4,cv,21,2,6.604194641113281e-05
+unet2d->unet2d logreg,cnn_s4,test,7,2,0.1796875
+unet2d->unet2d logreg,cnn_ensemble,cv,19,2,0.00022125244140625
+unet2d->unet2d logreg,cnn_ensemble,test,6,2,0.2890625
+unet2d->unet2d logreg,cnn_ensemble+TS,cv,19,2,0.00022125244140625
+unet2d->unet2d logreg,cnn_ensemble+TS,test,6,2,0.2890625
+unet2d->unet2d logreg,hybrid (unet2d->unet2d logreg + cnn_ensemble),cv,1,2,1.0
+unet2d->unet2d logreg,hybrid (unet2d->unet2d logreg + cnn_ensemble),test,1,2,1.0

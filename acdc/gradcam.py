@@ -85,8 +85,8 @@ def main():
                      "energy_on_heart_slices": float(cam[has].sum() / (cam.sum() + 1e-8)),
                      "pointing_game": bool(heart[z, yy, xx])})
         if len(examples) < 5 and r.group not in [e[1] for e in examples]:
-            zc = int(np.argmax(heart.sum((1, 2))))
-            examples.append((r.pid, r.group, GROUPS[pred], x[zc, 0].cpu().numpy(), cam[zc], heart[zc]))
+            zc = int(np.argmax(np.where(has, cam.sum((1, 2)), -1)))  # heart slice where the CAM is strongest
+            examples.append((r.pid, r.group, GROUPS[pred], x[zc, 0].cpu().numpy(), cam[zc] / (cam[zc].max() + 1e-8), heart[zc]))
         print(rows[-1], flush=True)
     df = pd.DataFrame(rows)
     df.to_csv(OUT / "gradcam.csv", index=False)
@@ -103,7 +103,8 @@ def main():
         ax[1, j].contour(heart.T, levels=[0.5], colors="white", linewidths=0.8)
         for a in ax[:, j]:
             a.axis("off")
-    fig.suptitle(f"Grad-CAM of the end-to-end CNN (ED channel shown; green/white = heart region). "
+    fig.suptitle(f"Grad-CAM of the end-to-end CNN (ED channel, slice with the strongest CAM, scaled to its maximum; "
+                 f"green/white = heart region).\n"
                  f"Energy in heart {summ['all']['energy_in_heart']:.2f} vs area {summ['all']['heart_area']:.2f}")
     fig.tight_layout(); fig.savefig(OUT / "fig_gradcam.png", dpi=110); plt.close(fig)
     print(json.dumps(summ, indent=1))
