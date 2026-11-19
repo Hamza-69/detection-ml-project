@@ -114,10 +114,13 @@ def make_app(M: Models, examples_dir: Path):
         for ph, f in (("ED", ed_file), ("ES", es_file)):
             img, sp, aff = load_nifti(str(f))
             x = torch.from_numpy(resample_image(normalize(img), sp[:2]))
-            p = probs_to_original(predict_volume(unets, x, M.cfg["in_ch"], tta=False, device=M.device), img.shape[1:])
+            per_model = [predict_volume(m, x, M.cfg["in_ch"], tta=False, device=M.device) for m in unets]
+            p = probs_to_original(torch.stack(per_model).mean(0), img.shape[1:])
             seg = keep_largest_component(p.argmax(1).numpy().astype(np.uint8))
             segs[ph], imgs[ph], resampled[ph] = seg, img, x
-            unc[ph] = uncertainty_summary(seg, entropy(p).numpy())["ent_fg"]
+            # uncertainty score from the first model alone, like the threshold (single model, no TTA, out-of-fold)
+            p0 = probs_to_original(per_model[0], img.shape[1:])
+            unc[ph] = uncertainty_summary(seg, entropy(p0).numpy())["ent_fg"]
         if segs["ED"].shape != segs["ES"].shape:
             raise gr.Error("ED and ES frames must have the same geometry.")
         feats = patient_features(segs["ED"], segs["ES"], sp, height, weight)
@@ -133,7 +136,7 @@ def make_app(M: Models, examples_dir: Path):
             cam, _, pr = gradcam(m, stack)
             cams.append(cam / (cam.max() + 1e-8)); probs.append(pr)
         cam, prob_cnn = np.mean(cams, 0), np.mean(probs, 0)
-        if M.cfg.get("cnn_temperature"):
+        if M.cfg.get("cnn_temperature") and not ensemble:  # T was fitted on single-model out-of-fold outputs
             z = np.log(np.clip(prob_cnn, 1e-7, 1)) / M.cfg["cnn_temperature"]
             prob_cnn = np.exp(z - z.max()) / np.exp(z - z.max()).sum()
         z_mid = int(np.argmax((to_canvas(torch.from_numpy(segs["ED"] > 0).float(), 0, CROP)).sum((1, 2))))

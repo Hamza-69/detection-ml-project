@@ -53,7 +53,9 @@ def main():
     clf = make_model("logreg", len(feats)).fit(tr[feats].values, tr.group.map(enc).values)
     joblib.dump(clf.best_estimator_, out / "feature_clf.joblib")
 
-    seg = pd.read_csv(RESULTS / "seg" / f"{args.seg_cfg}_metrics.csv")
+    # the app predicts without test-time augmentation -> threshold from the no-TTA out-of-fold predictions if available
+    m = RESULTS / "seg" / f"{args.seg_cfg}_notta_metrics.csv"
+    seg = pd.read_csv(m if m.exists() else RESULTS / "seg" / f"{args.seg_cfg}_metrics.csv")
     thr = float(seg[seg.split == "train"].ent_fg.quantile(0.9))
     temp = None
     seeds = RESULTS / "cls" / "cnn_seeds.csv"
