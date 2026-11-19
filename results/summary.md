@@ -12,6 +12,7 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | U-Net 2D (main)                       | 0.968 / 2.2  | 0.953 / 3.6  | 0.904 / 2.6  | 0.925 / 4.1  | 0.891 / 5.1  | 0.923 / 2.8  |       0.928 |
 | U-Net 2.5D (3 slices)                 | 0.968 / 2.2  | 0.950 / 3.8  | 0.903 / 2.6  | 0.919 / 4.3  | 0.893 / 5.1  | 0.921 / 3.1  |       0.926 |
 | U-Net 2D, no augmentation             | 0.965 / 2.2  | 0.937 / 4.7  | 0.894 / 2.5  | 0.909 / 5.4  | 0.880 / 6.3  | 0.909 / 4.1  |       0.916 |
+| U-Net 2D, CE loss only                | 0.968 / 2.3  | 0.951 / 3.4  | 0.902 / 2.7  | 0.919 / 4.3  | 0.889 / 5.4  | 0.920 / 3.1  |       0.925 |
 | U-Net 2D, no TTA                      | 0.968 / 2.2  | 0.952 / 3.5  | 0.903 / 2.6  | 0.923 / 4.1  | 0.889 / 5.3  | 0.921 / 2.8  |       0.926 |
 | U-Net 2D, no post-processing          | 0.968 / 2.4  | 0.953 / 3.6  | 0.905 / 2.2  | 0.930 / 3.5  | 0.891 / 5.1  | 0.923 / 2.8  |       0.928 |
 
@@ -23,6 +24,7 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | U-Net 2D (main)                       | 0.967 / 2.3  | 0.943 / 3.3  | 0.898 / 3.1  | 0.930 / 3.4  | 0.877 / 5.7  | 0.911 / 3.8  |       0.921 |
 | U-Net 2.5D (3 slices)                 | 0.968 / 1.8  | 0.941 / 3.6  | 0.898 / 2.9  | 0.928 / 3.2  | 0.873 / 5.9  | 0.911 / 3.3  |       0.92  |
 | U-Net 2D, no augmentation             | 0.963 / 2.0  | 0.930 / 4.3  | 0.881 / 3.2  | 0.913 / 4.6  | 0.852 / 6.7  | 0.896 / 4.1  |       0.906 |
+| U-Net 2D, CE loss only                | 0.966 / 2.2  | 0.940 / 3.7  | 0.896 / 3.2  | 0.926 / 3.7  | 0.873 / 5.9  | 0.908 / 3.9  |       0.918 |
 | U-Net 2D, no TTA                      | 0.965 / 2.3  | 0.942 / 3.4  | 0.893 / 3.2  | 0.930 / 3.4  | 0.871 / 6.2  | 0.908 / 3.7  |       0.918 |
 | U-Net 2D, no post-processing          | 0.967 / 2.4  | 0.941 / 4.8  | 0.901 / 2.3  | 0.927 / 4.7  | 0.877 / 6.5  | 0.911 / 3.6  |       0.921 |
 
@@ -42,6 +44,10 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d       | unet2d_noaug   | cv     | hd95     |      3.6   |        4.15  |  -0.55  | 100 |      0.0065  |
 | unet2d       | unet2d_noaug   | test   | dice     |      0.928 |        0.916 |   0.012 |  50 |      5e-11   |
 | unet2d       | unet2d_noaug   | test   | hd95     |      3.425 |        4.236 |  -0.812 |  50 |      3e-05   |
+| unet2d       | unet2d_ce      | cv     | dice     |      0.921 |        0.918 |   0.003 | 100 |      0.0004  |
+| unet2d       | unet2d_ce      | cv     | hd95     |      3.6   |        3.764 |  -0.165 | 100 |      0.059   |
+| unet2d       | unet2d_ce      | test   | dice     |      0.928 |        0.925 |   0.003 |  50 |      9.5e-05 |
+| unet2d       | unet2d_ce      | test   | hd95     |      3.425 |        3.532 |  -0.108 |  50 |      0.057   |
 | unet2d       | unet2d_notta   | cv     | dice     |      0.921 |        0.918 |   0.003 | 100 |      1.3e-10 |
 | unet2d       | unet2d_notta   | cv     | hd95     |      3.6   |        3.696 |  -0.097 | 100 |      0.041   |
 | unet2d       | unet2d_notta   | test   | dice     |      0.928 |        0.926 |   0.002 |  50 |      0.0015  |
@@ -66,6 +72,10 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d_notta | unet2d_noaug   | cv     | hd95     |      3.696 |        4.15  |  -0.454 | 100 |      0.053   |
 | unet2d_notta | unet2d_noaug   | test   | dice     |      0.926 |        0.916 |   0.01  |  50 |      5.8e-09 |
 | unet2d_notta | unet2d_noaug   | test   | hd95     |      3.425 |        4.236 |  -0.811 |  50 |      2.1e-05 |
+| unet2d_notta | unet2d_ce      | cv     | dice     |      0.918 |        0.918 |  -0     | 100 |      0.2     |
+| unet2d_notta | unet2d_ce      | cv     | hd95     |      3.696 |        3.764 |  -0.068 | 100 |      0.46    |
+| unet2d_notta | unet2d_ce      | test   | dice     |      0.926 |        0.925 |   0.001 |  50 |      0.35    |
+| unet2d_notta | unet2d_ce      | test   | hd95     |      3.425 |        3.532 |  -0.107 |  50 |      0.26    |
 | unet2d_notta | unet2d_nopp    | cv     | dice     |      0.918 |        0.921 |  -0.002 | 100 |      5.6e-08 |
 | unet2d_notta | unet2d_nopp    | cv     | hd95     |      3.696 |        4.043 |  -0.346 | 100 |      0.25    |
 | unet2d_notta | unet2d_nopp    | test   | dice     |      0.926 |        0.928 |  -0.002 |  50 |      0.001   |
@@ -173,6 +183,16 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d_noaug   | train   | MINF    |     0.855 |      0.88  |     0.953 |
 | unet2d_noaug   | train   | NOR     |     0.917 |      0.907 |     0.946 |
 | unet2d_noaug   | train   | RV      |     0.906 |      0.863 |     0.916 |
+| unet2d_ce      | test    | DCM     |     0.942 |      0.901 |     0.973 |
+| unet2d_ce      | test    | HCM     |     0.894 |      0.926 |     0.89  |
+| unet2d_ce      | test    | MINF    |     0.898 |      0.909 |     0.966 |
+| unet2d_ce      | test    | NOR     |     0.93  |      0.911 |     0.935 |
+| unet2d_ce      | test    | RV      |     0.936 |      0.91  |     0.954 |
+| unet2d_ce      | train   | DCM     |     0.905 |      0.895 |     0.969 |
+| unet2d_ce      | train   | HCM     |     0.896 |      0.917 |     0.907 |
+| unet2d_ce      | train   | MINF    |     0.876 |      0.893 |     0.958 |
+| unet2d_ce      | train   | NOR     |     0.933 |      0.921 |     0.958 |
+| unet2d_ce      | train   | RV      |     0.92  |      0.885 |     0.94  |
 | unet2d_notta   | test    | DCM     |     0.943 |      0.901 |     0.973 |
 | unet2d_notta   | test    | HCM     |     0.902 |      0.928 |     0.896 |
 | unet2d_notta   | test    | MINF    |     0.9   |      0.911 |     0.967 |
@@ -209,6 +229,9 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d_noaug   | cv     | ent_fg   |         200 |       29 |             -0.222 |        0.691 |           0.906 |              0.911 |             22 |              0.915 |             16 |              0.915 |             13 |
 | unet2d_noaug   | test   | ent_fg   |         100 |       13 |             -0.597 |        0.79  |           0.916 |              0.919 |             10 |              0.921 |              8 |              0.924 |              4 |
 | unet2d_noaug   | test   | disagree |         100 |       13 |             -0.67  |        0.824 |           0.916 |              0.92  |              9 |              0.923 |              7 |              0.926 |              4 |
+| unet2d_ce      | cv     | ent_fg   |         200 |       21 |             -0.543 |        0.75  |           0.918 |              0.923 |             14 |              0.926 |             10 |              0.929 |              7 |
+| unet2d_ce      | test   | ent_fg   |         100 |       10 |             -0.452 |        0.77  |           0.925 |              0.928 |              6 |              0.931 |              4 |              0.932 |              4 |
+| unet2d_ce      | test   | disagree |         100 |       10 |             -0.649 |        0.866 |           0.925 |              0.93  |              5 |              0.933 |              3 |              0.936 |              2 |
 | unet2d_notta   | cv     | ent_fg   |         200 |       20 |             -0.172 |        0.606 |           0.918 |              0.919 |             19 |              0.923 |             13 |              0.922 |             11 |
 | unet2d_notta   | test   | ent_fg   |         100 |        8 |             -0.567 |        0.821 |           0.926 |              0.93  |              5 |              0.933 |              3 |              0.936 |              2 |
 | unet2d_notta   | test   | disagree |         100 |        8 |             -0.719 |        0.841 |           0.926 |              0.93  |              5 |              0.934 |              3 |              0.938 |              1 |
@@ -244,6 +267,10 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | gt->unet2d_noaug rf                           | test   | 0.94  | 0.860    | 1.000    |      0.94  | 0.359 |   0.171 | 0.125 | –        | –        |
 | unet2d_noaug->unet2d_noaug logreg             | test   | 0.98  | 0.940    | 1.000    |      0.98  | 0.238 |   0.081 | 0.063 | –        | –        |
 | unet2d_noaug->unet2d_noaug rf                 | test   | 0.9   | 0.800    | 0.980    |      0.9   | 0.331 |   0.154 | 0.078 | –        | –        |
+| gt->unet2d_ce logreg                          | test   | 0.94  | 0.860    | 1.000    |      0.94  | 0.325 |   0.119 | 0.058 | –        | –        |
+| gt->unet2d_ce rf                              | test   | 0.94  | 0.860    | 1.000    |      0.94  | 0.357 |   0.168 | 0.123 | –        | –        |
+| unet2d_ce->unet2d_ce logreg                   | test   | 0.94  | 0.860    | 1.000    |      0.939 | 0.245 |   0.114 | 0.085 | –        | –        |
+| unet2d_ce->unet2d_ce rf                       | test   | 0.9   | 0.800    | 0.980    |      0.9   | 0.371 |   0.175 | 0.084 | –        | –        |
 | cnn_s0                                        | test   | 0.84  | 0.740    | 0.940    |      0.84  | 0.443 |   0.21  | 0.113 | –        | –        |
 | cnn_s1                                        | test   | 0.86  | 0.760    | 0.960    |      0.861 | 0.438 |   0.205 | 0.066 | –        | –        |
 | cnn_s2                                        | test   | 0.84  | 0.720    | 0.940    |      0.841 | 0.405 |   0.223 | 0.076 | –        | –        |
@@ -278,6 +305,10 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | gt->unet2d_noaug rf                           | cv     | 0.89  | 0.830    | 0.950    |      0.889 | 0.362 |   0.181 | 0.108 | –        | –        |
 | unet2d_noaug->unet2d_noaug logreg             | cv     | 0.92  | 0.860    | 0.970    |      0.921 | 0.206 |   0.115 | 0.026 | –        | –        |
 | unet2d_noaug->unet2d_noaug rf                 | cv     | 0.89  | 0.830    | 0.950    |      0.889 | 0.374 |   0.196 | 0.141 | –        | –        |
+| gt->unet2d_ce logreg                          | cv     | 0.89  | 0.820    | 0.950    |      0.891 | 0.376 |   0.177 | 0.065 | –        | –        |
+| gt->unet2d_ce rf                              | cv     | 0.89  | 0.830    | 0.950    |      0.89  | 0.343 |   0.177 | 0.088 | –        | –        |
+| unet2d_ce->unet2d_ce logreg                   | cv     | 0.91  | 0.850    | 0.960    |      0.91  | 0.259 |   0.124 | 0.036 | –        | –        |
+| unet2d_ce->unet2d_ce rf                       | cv     | 0.92  | 0.870    | 0.970    |      0.92  | 0.363 |   0.185 | 0.138 | –        | –        |
 | cnn_s0                                        | cv     | 0.74  | 0.650    | 0.830    |      0.737 | 1.013 |   0.425 | 0.191 | –        | –        |
 | cnn_s1                                        | cv     | 0.72  | 0.630    | 0.810    |      0.717 | 1.076 |   0.423 | 0.184 | –        | –        |
 | cnn_s2                                        | cv     | 0.74  | 0.650    | 0.820    |      0.735 | 0.837 |   0.383 | 0.165 | –        | –        |
@@ -330,6 +361,14 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | unet2d->unet2d logreg | unet2d_noaug->unet2d_noaug logreg             | test   |                       0 |                       2 |       0.5   |
 | unet2d->unet2d logreg | unet2d_noaug->unet2d_noaug rf                 | cv     |                       7 |                       4 |       0.549 |
 | unet2d->unet2d logreg | unet2d_noaug->unet2d_noaug rf                 | test   |                       2 |                       0 |       0.5   |
+| unet2d->unet2d logreg | gt->unet2d_ce logreg                          | cv     |                       4 |                       1 |       0.375 |
+| unet2d->unet2d logreg | gt->unet2d_ce logreg                          | test   |                       2 |                       2 |       1     |
+| unet2d->unet2d logreg | gt->unet2d_ce rf                              | cv     |                       8 |                       5 |       0.581 |
+| unet2d->unet2d logreg | gt->unet2d_ce rf                              | test   |                       1 |                       1 |       1     |
+| unet2d->unet2d logreg | unet2d_ce->unet2d_ce logreg                   | cv     |                       2 |                       1 |       1     |
+| unet2d->unet2d logreg | unet2d_ce->unet2d_ce logreg                   | test   |                       0 |                       0 |       1     |
+| unet2d->unet2d logreg | unet2d_ce->unet2d_ce rf                       | cv     |                       5 |                       5 |       1     |
+| unet2d->unet2d logreg | unet2d_ce->unet2d_ce rf                       | test   |                       2 |                       0 |       0.5   |
 | unet2d->unet2d logreg | cnn_s0                                        | cv     |                      20 |                       2 |       0     |
 | unet2d->unet2d logreg | cnn_s0                                        | test   |                       7 |                       2 |       0.18  |
 | unet2d->unet2d logreg | cnn_s1                                        | cv     |                      22 |                       2 |       0     |

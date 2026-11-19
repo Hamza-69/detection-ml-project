@@ -19,6 +19,11 @@
     "cv_mean_dice": 0.90573773954032,
     "test_mean_hd95": 4.236176639496585
   },
+  "unet2d_ce": {
+    "test_mean_dice": 0.9249264645115551,
+    "cv_mean_dice": 0.9181630761845777,
+    "test_mean_hd95": 3.5321508375452653
+  },
   "unet2d_notta": {
     "test_mean_dice": 0.9260006220655219,
     "cv_mean_dice": 0.9181284840356669,
