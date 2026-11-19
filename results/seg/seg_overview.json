@@ -3,5 +3,20 @@
     "test_mean_dice": 0.6385326431211558,
     "cv_mean_dice": 0.6425844667559583,
     "test_mean_hd95": 19.800770230106746
+  },
+  "unet2d": {
+    "test_mean_dice": 0.9275141542548289,
+    "cv_mean_dice": 0.921049910332882,
+    "test_mean_hd95": 3.424552951851453
+  },
+  "unet2d_notta": {
+    "test_mean_dice": 0.9260006220655219,
+    "cv_mean_dice": 0.9181284840356669,
+    "test_mean_hd95": 3.425108010413021
+  },
+  "unet2d_nopp": {
+    "test_mean_dice": 0.9283229349250339,
+    "cv_mean_dice": 0.9206129660265128,
+    "test_mean_hd95": 3.2911997852136685
   }
 }
