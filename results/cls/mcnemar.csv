@@ -13,6 +13,14 @@ unet2d->unet2d logreg,gt->unet2d rf,cv,8,5,0.5810546875
 unet2d->unet2d logreg,gt->unet2d rf,test,1,1,1.0
 unet2d->unet2d logreg,unet2d->unet2d rf,cv,5,4,1.0
 unet2d->unet2d logreg,unet2d->unet2d rf,test,3,0,0.25
+unet2d->unet2d logreg,gt->unet25d logreg,cv,3,3,1.0
+unet2d->unet2d logreg,gt->unet25d logreg,test,3,2,1.0
+unet2d->unet2d logreg,gt->unet25d rf,cv,7,6,1.0
+unet2d->unet2d logreg,gt->unet25d rf,test,1,1,1.0
+unet2d->unet2d logreg,unet25d->unet25d logreg,cv,2,2,1.0
+unet2d->unet2d logreg,unet25d->unet25d logreg,test,0,1,1.0
+unet2d->unet2d logreg,unet25d->unet25d rf,cv,4,5,1.0
+unet2d->unet2d logreg,unet25d->unet25d rf,test,2,0,0.5
 unet2d->unet2d logreg,gt->classical_lgbm logreg,cv,59,3,1.724922288337538e-14
 unet2d->unet2d logreg,gt->classical_lgbm logreg,test,28,1,1.1175870895385742e-07
 unet2d->unet2d logreg,gt->classical_lgbm rf,cv,44,4,1.5138326148189662e-09

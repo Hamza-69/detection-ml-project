@@ -10,6 +10,7 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 |:--------------------------------------|:-------------|:-------------|:-------------|:-------------|:-------------|:-------------|------------:|
 | Classical (LightGBM pixel classifier) | 0.820 / 12.4 | 0.582 / 22.2 | 0.663 / 17.0 | 0.655 / 19.6 | 0.484 / 28.5 | 0.628 / 19.1 |       0.639 |
 | U-Net 2D (main)                       | 0.968 / 2.2  | 0.953 / 3.6  | 0.904 / 2.6  | 0.925 / 4.1  | 0.891 / 5.1  | 0.923 / 2.8  |       0.928 |
+| U-Net 2.5D (3 slices)                 | 0.968 / 2.2  | 0.950 / 3.8  | 0.903 / 2.6  | 0.919 / 4.3  | 0.893 / 5.1  | 0.921 / 3.1  |       0.926 |
 | U-Net 2D, no TTA                      | 0.968 / 2.2  | 0.952 / 3.5  | 0.903 / 2.6  | 0.923 / 4.1  | 0.889 / 5.3  | 0.921 / 2.8  |       0.926 |
 | U-Net 2D, no post-processing          | 0.968 / 2.4  | 0.953 / 3.6  | 0.905 / 2.2  | 0.930 / 3.5  | 0.891 / 5.1  | 0.923 / 2.8  |       0.928 |
 
@@ -19,6 +20,7 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 |:--------------------------------------|:-------------|:-------------|:-------------|:-------------|:-------------|:-------------|------------:|
 | Classical (LightGBM pixel classifier) | 0.820 / 10.4 | 0.576 / 22.4 | 0.640 / 17.6 | 0.710 / 15.3 | 0.485 / 26.2 | 0.625 / 18.5 |       0.643 |
 | U-Net 2D (main)                       | 0.967 / 2.3  | 0.943 / 3.3  | 0.898 / 3.1  | 0.930 / 3.4  | 0.877 / 5.7  | 0.911 / 3.8  |       0.921 |
+| U-Net 2.5D (3 slices)                 | 0.968 / 1.8  | 0.941 / 3.6  | 0.898 / 2.9  | 0.928 / 3.2  | 0.873 / 5.9  | 0.911 / 3.3  |       0.92  |
 | U-Net 2D, no TTA                      | 0.965 / 2.3  | 0.942 / 3.4  | 0.893 / 3.2  | 0.930 / 3.4  | 0.871 / 6.2  | 0.908 / 3.7  |       0.918 |
 | U-Net 2D, no post-processing          | 0.967 / 2.4  | 0.941 / 4.8  | 0.901 / 2.3  | 0.927 / 4.7  | 0.877 / 6.5  | 0.911 / 3.6  |       0.921 |
 
@@ -30,6 +32,10 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d | classical_lgbm | cv     | hd95     |      3.6   |       18.371 | -14.771 | 100 |      3.9e-18 |
 | unet2d | classical_lgbm | test   | dice     |      0.928 |        0.639 |   0.289 |  50 |      1.8e-15 |
 | unet2d | classical_lgbm | test   | hd95     |      3.425 |       19.801 | -16.376 |  50 |      1.8e-15 |
+| unet2d | unet25d        | cv     | dice     |      0.921 |        0.92  |   0.001 | 100 |      0.22    |
+| unet2d | unet25d        | cv     | hd95     |      3.6   |        3.454 |   0.146 | 100 |      0.39    |
+| unet2d | unet25d        | test   | dice     |      0.928 |        0.926 |   0.002 |  50 |      0.068   |
+| unet2d | unet25d        | test   | hd95     |      3.425 |        3.514 |  -0.089 |  50 |      0.32    |
 | unet2d | unet2d_notta   | cv     | dice     |      0.921 |        0.918 |   0.003 | 100 |      1.3e-10 |
 | unet2d | unet2d_notta   | cv     | hd95     |      3.6   |        3.696 |  -0.097 | 100 |      0.041   |
 | unet2d | unet2d_notta   | test   | dice     |      0.928 |        0.926 |   0.002 |  50 |      0.0015  |
@@ -71,6 +77,20 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d         | test   | RV_ESV   | mL     |        0.96 |  -3.37 |   -31.34 |    24.6  |  9.09 |
 | unet2d         | test   | RV_EF    | %      |        0.87 |   1.85 |   -11.66 |    15.35 |  5.16 |
 | unet2d         | test   | MYO_mass | g      |        0.99 |   4.96 |   -11.23 |    21.15 |  7.54 |
+| unet25d        | cv     | LV_EDV   | mL     |        1    |  -0.44 |   -10.49 |     9.61 |  3.75 |
+| unet25d        | cv     | LV_ESV   | mL     |        1    |  -0.5  |   -12.91 |    11.92 |  4.47 |
+| unet25d        | cv     | LV_EF    | %      |        0.98 |   0.15 |    -8.09 |     8.38 |  2.83 |
+| unet25d        | cv     | RV_EDV   | mL     |        0.98 |  -0.68 |   -24.27 |    22.91 |  7.6  |
+| unet25d        | cv     | RV_ESV   | mL     |        0.95 |   0.84 |   -31.83 |    33.5  | 10.39 |
+| unet25d        | cv     | RV_EF    | %      |        0.88 |  -0.59 |   -17.75 |    16.56 |  6.22 |
+| unet25d        | cv     | MYO_mass | g      |        0.99 |   2.43 |   -12.91 |    17.77 |  6.43 |
+| unet25d        | test   | LV_EDV   | mL     |        1    |  -0.85 |   -13.49 |    11.79 |  4.99 |
+| unet25d        | test   | LV_ESV   | mL     |        1    |   0.19 |   -13.95 |    14.33 |  5.53 |
+| unet25d        | test   | LV_EF    | %      |        0.99 |  -0.55 |    -7.55 |     6.46 |  2.66 |
+| unet25d        | test   | RV_EDV   | mL     |        0.99 |  -0.79 |   -17.89 |    16.32 |  6.12 |
+| unet25d        | test   | RV_ESV   | mL     |        0.96 |  -3.95 |   -33.33 |    25.44 |  8.89 |
+| unet25d        | test   | RV_EF    | %      |        0.88 |   2.73 |   -10.71 |    16.18 |  5.08 |
+| unet25d        | test   | MYO_mass | g      |        0.99 |   3.85 |   -12.59 |    20.28 |  7.21 |
 
 ### U-Net 2D: slice-wise Dice by position (base / mid / apex thirds)
 
@@ -107,6 +127,16 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d         | train   | MINF    |     0.882 |      0.896 |     0.958 |
 | unet2d         | train   | NOR     |     0.937 |      0.922 |     0.959 |
 | unet2d         | train   | RV      |     0.92  |      0.886 |     0.938 |
+| unet25d        | test    | DCM     |     0.94  |      0.903 |     0.973 |
+| unet25d        | test    | HCM     |     0.906 |      0.923 |     0.89  |
+| unet25d        | test    | MINF    |     0.893 |      0.911 |     0.966 |
+| unet25d        | test    | NOR     |     0.928 |      0.912 |     0.935 |
+| unet25d        | test    | RV      |     0.94  |      0.911 |     0.955 |
+| unet25d        | train   | DCM     |     0.901 |      0.899 |     0.972 |
+| unet25d        | train   | HCM     |     0.894 |      0.918 |     0.908 |
+| unet25d        | train   | MINF    |     0.885 |      0.898 |     0.964 |
+| unet25d        | train   | NOR     |     0.937 |      0.922 |     0.959 |
+| unet25d        | train   | RV      |     0.917 |      0.886 |     0.938 |
 | unet2d_notta   | test    | DCM     |     0.943 |      0.901 |     0.973 |
 | unet2d_notta   | test    | HCM     |     0.902 |      0.928 |     0.896 |
 | unet2d_notta   | test    | MINF    |     0.9   |      0.911 |     0.967 |
@@ -137,6 +167,9 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet2d         | cv     | ent_fg   |         200 |       20 |             -0.596 |        0.759 |           0.921 |              0.926 |             14 |              0.93  |              9 |              0.932 |              7 |
 | unet2d         | test   | ent_fg   |         100 |        9 |             -0.539 |        0.822 |           0.928 |              0.932 |              5 |              0.934 |              3 |              0.936 |              3 |
 | unet2d         | test   | disagree |         100 |        9 |             -0.657 |        0.839 |           0.928 |              0.932 |              5 |              0.935 |              4 |              0.938 |              1 |
+| unet25d        | cv     | ent_fg   |         200 |       20 |             -0.574 |        0.762 |           0.92  |              0.926 |             14 |              0.93  |              7 |              0.932 |              5 |
+| unet25d        | test   | ent_fg   |         100 |       10 |             -0.584 |        0.8   |           0.926 |              0.928 |              7 |              0.932 |              5 |              0.936 |              3 |
+| unet25d        | test   | disagree |         100 |       10 |             -0.666 |        0.838 |           0.926 |              0.929 |              7 |              0.933 |              5 |              0.937 |              2 |
 | unet2d_notta   | cv     | ent_fg   |         200 |       20 |             -0.172 |        0.606 |           0.918 |              0.919 |             19 |              0.923 |             13 |              0.922 |             11 |
 | unet2d_notta   | test   | ent_fg   |         100 |        8 |             -0.567 |        0.821 |           0.926 |              0.93  |              5 |              0.933 |              3 |              0.936 |              2 |
 | unet2d_notta   | test   | disagree |         100 |        8 |             -0.719 |        0.841 |           0.926 |              0.93  |              5 |              0.934 |              3 |              0.938 |              1 |
@@ -160,6 +193,10 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | gt->unet2d rf                                 | test   | 0.94  | 0.860    | 1.000    |      0.94  | 0.365 |   0.169 | 0.115 | –        | –        |
 | unet2d->unet2d logreg                         | test   | 0.94  | 0.860    | 1.000    |      0.939 | 0.238 |   0.103 | 0.048 | –        | –        |
 | unet2d->unet2d rf                             | test   | 0.88  | 0.780    | 0.960    |      0.88  | 0.331 |   0.17  | 0.099 | –        | –        |
+| gt->unet25d logreg                            | test   | 0.92  | 0.840    | 0.980    |      0.92  | 0.349 |   0.139 | 0.044 | –        | –        |
+| gt->unet25d rf                                | test   | 0.94  | 0.860    | 1.000    |      0.94  | 0.359 |   0.164 | 0.114 | –        | –        |
+| unet25d->unet25d logreg                       | test   | 0.96  | 0.900    | 1.000    |      0.96  | 0.199 |   0.09  | 0.041 | –        | –        |
+| unet25d->unet25d rf                           | test   | 0.9   | 0.800    | 0.980    |      0.9   | 0.343 |   0.169 | 0.084 | –        | –        |
 | gt->classical_lgbm logreg                     | test   | 0.4   | 0.260    | 0.540    |      0.307 | 6.875 |   1.143 | 0.539 | –        | –        |
 | gt->classical_lgbm rf                         | test   | 0.54  | 0.400    | 0.680    |      0.509 | 1.382 |   0.693 | 0.237 | –        | –        |
 | classical_lgbm->classical_lgbm logreg         | test   | 0.58  | 0.440    | 0.720    |      0.577 | 1.324 |   0.593 | 0.131 | –        | –        |
@@ -186,6 +223,10 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | gt->unet2d rf                                 | cv     | 0.89  | 0.830    | 0.950    |      0.89  | 0.34  |   0.172 | 0.085 | –        | –        |
 | unet2d->unet2d logreg                         | cv     | 0.92  | 0.860    | 0.970    |      0.92  | 0.177 |   0.099 | 0.031 | –        | –        |
 | unet2d->unet2d rf                             | cv     | 0.91  | 0.850    | 0.960    |      0.91  | 0.35  |   0.177 | 0.128 | –        | –        |
+| gt->unet25d logreg                            | cv     | 0.92  | 0.860    | 0.970    |      0.92  | 0.291 |   0.133 | 0.061 | –        | –        |
+| gt->unet25d rf                                | cv     | 0.91  | 0.850    | 0.960    |      0.91  | 0.335 |   0.163 | 0.098 | –        | –        |
+| unet25d->unet25d logreg                       | cv     | 0.92  | 0.860    | 0.970    |      0.92  | 0.236 |   0.112 | 0.025 | –        | –        |
+| unet25d->unet25d rf                           | cv     | 0.93  | 0.880    | 0.980    |      0.931 | 0.322 |   0.159 | 0.129 | –        | –        |
 | gt->classical_lgbm logreg                     | cv     | 0.36  | 0.270    | 0.450    |      0.283 | 6.709 |   1.134 | 0.537 | –        | –        |
 | gt->classical_lgbm rf                         | cv     | 0.52  | 0.420    | 0.620    |      0.47  | 1.508 |   0.644 | 0.146 | –        | –        |
 | classical_lgbm->classical_lgbm logreg         | cv     | 0.62  | 0.520    | 0.710    |      0.616 | 1.298 |   0.576 | 0.106 | –        | –        |
@@ -218,6 +259,14 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | unet2d->unet2d logreg | gt->unet2d rf                                 | test   |                       1 |                       1 |       1     |
 | unet2d->unet2d logreg | unet2d->unet2d rf                             | cv     |                       5 |                       4 |       1     |
 | unet2d->unet2d logreg | unet2d->unet2d rf                             | test   |                       3 |                       0 |       0.25  |
+| unet2d->unet2d logreg | gt->unet25d logreg                            | cv     |                       3 |                       3 |       1     |
+| unet2d->unet2d logreg | gt->unet25d logreg                            | test   |                       3 |                       2 |       1     |
+| unet2d->unet2d logreg | gt->unet25d rf                                | cv     |                       7 |                       6 |       1     |
+| unet2d->unet2d logreg | gt->unet25d rf                                | test   |                       1 |                       1 |       1     |
+| unet2d->unet2d logreg | unet25d->unet25d logreg                       | cv     |                       2 |                       2 |       1     |
+| unet2d->unet2d logreg | unet25d->unet25d logreg                       | test   |                       0 |                       1 |       1     |
+| unet2d->unet2d logreg | unet25d->unet25d rf                           | cv     |                       4 |                       5 |       1     |
+| unet2d->unet2d logreg | unet25d->unet25d rf                           | test   |                       2 |                       0 |       0.5   |
 | unet2d->unet2d logreg | gt->classical_lgbm logreg                     | cv     |                      59 |                       3 |       0     |
 | unet2d->unet2d logreg | gt->classical_lgbm logreg                     | test   |                      28 |                       1 |       0     |
 | unet2d->unet2d logreg | gt->classical_lgbm rf                         | cv     |                      44 |                       4 |       0     |
