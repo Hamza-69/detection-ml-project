@@ -74,6 +74,12 @@ def main():
     ap.add_argument("--out", default=None, help="name for outputs (default: cfg, + suffixes)")
     args = ap.parse_args()
     name = args.out or args.cfg + ("_notta" if args.no_tta else "") + ("_nopp" if args.no_pp else "")
+    # Mirroring TTA is only valid for models trained with mirroring augmentation: a model trained without
+    # augmentation has never seen flipped hearts (RV on the other side) and its flipped predictions are wrong.
+    trained_aug = load_model(WORK / "runs" / f"{args.cfg}_f0" / "model.pt", "cpu")[1]["args"]["aug"]
+    if trained_aug == "none" and not args.no_tta:
+        print("model trained without augmentation -> predicting without mirroring TTA")
+        args.no_tta = True
     (WORK / "preds" / name).mkdir(parents=True, exist_ok=True)
     (RESULTS / "seg").mkdir(parents=True, exist_ok=True)
     meta = pd.read_csv(RESULTS / "acdc_meta.csv")

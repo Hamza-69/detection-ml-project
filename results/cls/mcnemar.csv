@@ -29,6 +29,14 @@ unet2d->unet2d logreg,classical_lgbm->classical_lgbm logreg,cv,32,2,6.9383531808
 unet2d->unet2d logreg,classical_lgbm->classical_lgbm logreg,test,19,1,4.00543212890625e-05
 unet2d->unet2d logreg,classical_lgbm->classical_lgbm rf,cv,31,2,1.3085082173347473e-07
 unet2d->unet2d logreg,classical_lgbm->classical_lgbm rf,test,17,0,1.52587890625e-05
+unet2d->unet2d logreg,gt->unet2d_noaug logreg,cv,3,2,1.0
+unet2d->unet2d logreg,gt->unet2d_noaug logreg,test,3,2,1.0
+unet2d->unet2d logreg,gt->unet2d_noaug rf,cv,8,5,0.5810546875
+unet2d->unet2d logreg,gt->unet2d_noaug rf,test,1,1,1.0
+unet2d->unet2d logreg,unet2d_noaug->unet2d_noaug logreg,cv,4,4,1.0
+unet2d->unet2d logreg,unet2d_noaug->unet2d_noaug logreg,test,0,2,0.5
+unet2d->unet2d logreg,unet2d_noaug->unet2d_noaug rf,cv,7,4,0.548828125
+unet2d->unet2d logreg,unet2d_noaug->unet2d_noaug rf,test,2,0,0.5
 unet2d->unet2d logreg,cnn_s0,cv,20,2,0.00012111663818359375
 unet2d->unet2d logreg,cnn_s0,test,7,2,0.1796875
 unet2d->unet2d logreg,cnn_s1,cv,22,2,3.5881996154785156e-05

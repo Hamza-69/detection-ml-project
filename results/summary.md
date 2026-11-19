@@ -11,6 +11,7 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | Classical (LightGBM pixel classifier) | 0.820 / 12.4 | 0.582 / 22.2 | 0.663 / 17.0 | 0.655 / 19.6 | 0.484 / 28.5 | 0.628 / 19.1 |       0.639 |
 | U-Net 2D (main)                       | 0.968 / 2.2  | 0.953 / 3.6  | 0.904 / 2.6  | 0.925 / 4.1  | 0.891 / 5.1  | 0.923 / 2.8  |       0.928 |
 | U-Net 2.5D (3 slices)                 | 0.968 / 2.2  | 0.950 / 3.8  | 0.903 / 2.6  | 0.919 / 4.3  | 0.893 / 5.1  | 0.921 / 3.1  |       0.926 |
+| U-Net 2D, no augmentation             | 0.965 / 2.2  | 0.937 / 4.7  | 0.894 / 2.5  | 0.909 / 5.4  | 0.880 / 6.3  | 0.909 / 4.1  |       0.916 |
 | U-Net 2D, no TTA                      | 0.968 / 2.2  | 0.952 / 3.5  | 0.903 / 2.6  | 0.923 / 4.1  | 0.889 / 5.3  | 0.921 / 2.8  |       0.926 |
 | U-Net 2D, no post-processing          | 0.968 / 2.4  | 0.953 / 3.6  | 0.905 / 2.2  | 0.930 / 3.5  | 0.891 / 5.1  | 0.923 / 2.8  |       0.928 |
 
@@ -21,29 +22,54 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | Classical (LightGBM pixel classifier) | 0.820 / 10.4 | 0.576 / 22.4 | 0.640 / 17.6 | 0.710 / 15.3 | 0.485 / 26.2 | 0.625 / 18.5 |       0.643 |
 | U-Net 2D (main)                       | 0.967 / 2.3  | 0.943 / 3.3  | 0.898 / 3.1  | 0.930 / 3.4  | 0.877 / 5.7  | 0.911 / 3.8  |       0.921 |
 | U-Net 2.5D (3 slices)                 | 0.968 / 1.8  | 0.941 / 3.6  | 0.898 / 2.9  | 0.928 / 3.2  | 0.873 / 5.9  | 0.911 / 3.3  |       0.92  |
+| U-Net 2D, no augmentation             | 0.963 / 2.0  | 0.930 / 4.3  | 0.881 / 3.2  | 0.913 / 4.6  | 0.852 / 6.7  | 0.896 / 4.1  |       0.906 |
 | U-Net 2D, no TTA                      | 0.965 / 2.3  | 0.942 / 3.4  | 0.893 / 3.2  | 0.930 / 3.4  | 0.871 / 6.2  | 0.908 / 3.7  |       0.918 |
 | U-Net 2D, no post-processing          | 0.967 / 2.4  | 0.941 / 4.8  | 0.901 / 2.3  | 0.927 / 4.7  | 0.877 / 6.5  | 0.911 / 3.6  |       0.921 |
 
 ### Paired Wilcoxon tests (per-patient mean over structures and phases)
 
-| ref    | other          | eval   | metric   |   ref_mean |   other_mean |    diff |   n |   wilcoxon_p |
-|:-------|:---------------|:-------|:---------|-----------:|-------------:|--------:|----:|-------------:|
-| unet2d | classical_lgbm | cv     | dice     |      0.921 |        0.643 |   0.278 | 100 |      3.9e-18 |
-| unet2d | classical_lgbm | cv     | hd95     |      3.6   |       18.371 | -14.771 | 100 |      3.9e-18 |
-| unet2d | classical_lgbm | test   | dice     |      0.928 |        0.639 |   0.289 |  50 |      1.8e-15 |
-| unet2d | classical_lgbm | test   | hd95     |      3.425 |       19.801 | -16.376 |  50 |      1.8e-15 |
-| unet2d | unet25d        | cv     | dice     |      0.921 |        0.92  |   0.001 | 100 |      0.22    |
-| unet2d | unet25d        | cv     | hd95     |      3.6   |        3.454 |   0.146 | 100 |      0.39    |
-| unet2d | unet25d        | test   | dice     |      0.928 |        0.926 |   0.002 |  50 |      0.068   |
-| unet2d | unet25d        | test   | hd95     |      3.425 |        3.514 |  -0.089 |  50 |      0.32    |
-| unet2d | unet2d_notta   | cv     | dice     |      0.921 |        0.918 |   0.003 | 100 |      1.3e-10 |
-| unet2d | unet2d_notta   | cv     | hd95     |      3.6   |        3.696 |  -0.097 | 100 |      0.041   |
-| unet2d | unet2d_notta   | test   | dice     |      0.928 |        0.926 |   0.002 |  50 |      0.0015  |
-| unet2d | unet2d_notta   | test   | hd95     |      3.425 |        3.425 |  -0.001 |  50 |      0.27    |
-| unet2d | unet2d_nopp    | cv     | dice     |      0.921 |        0.921 |   0     | 100 |      0.52    |
-| unet2d | unet2d_nopp    | cv     | hd95     |      3.6   |        4.043 |  -0.443 | 100 |      0.91    |
-| unet2d | unet2d_nopp    | test   | dice     |      0.928 |        0.928 |  -0.001 |  50 |      0.71    |
-| unet2d | unet2d_nopp    | test   | hd95     |      3.425 |        3.291 |   0.133 |  50 |      0.26    |
+| ref          | other          | eval   | metric   |   ref_mean |   other_mean |    diff |   n |   wilcoxon_p |
+|:-------------|:---------------|:-------|:---------|-----------:|-------------:|--------:|----:|-------------:|
+| unet2d       | classical_lgbm | cv     | dice     |      0.921 |        0.643 |   0.278 | 100 |      3.9e-18 |
+| unet2d       | classical_lgbm | cv     | hd95     |      3.6   |       18.371 | -14.771 | 100 |      3.9e-18 |
+| unet2d       | classical_lgbm | test   | dice     |      0.928 |        0.639 |   0.289 |  50 |      1.8e-15 |
+| unet2d       | classical_lgbm | test   | hd95     |      3.425 |       19.801 | -16.376 |  50 |      1.8e-15 |
+| unet2d       | unet25d        | cv     | dice     |      0.921 |        0.92  |   0.001 | 100 |      0.22    |
+| unet2d       | unet25d        | cv     | hd95     |      3.6   |        3.454 |   0.146 | 100 |      0.39    |
+| unet2d       | unet25d        | test   | dice     |      0.928 |        0.926 |   0.002 |  50 |      0.068   |
+| unet2d       | unet25d        | test   | hd95     |      3.425 |        3.514 |  -0.089 |  50 |      0.32    |
+| unet2d       | unet2d_noaug   | cv     | dice     |      0.921 |        0.906 |   0.015 | 100 |      1.4e-11 |
+| unet2d       | unet2d_noaug   | cv     | hd95     |      3.6   |        4.15  |  -0.55  | 100 |      0.0065  |
+| unet2d       | unet2d_noaug   | test   | dice     |      0.928 |        0.916 |   0.012 |  50 |      5e-11   |
+| unet2d       | unet2d_noaug   | test   | hd95     |      3.425 |        4.236 |  -0.812 |  50 |      3e-05   |
+| unet2d       | unet2d_notta   | cv     | dice     |      0.921 |        0.918 |   0.003 | 100 |      1.3e-10 |
+| unet2d       | unet2d_notta   | cv     | hd95     |      3.6   |        3.696 |  -0.097 | 100 |      0.041   |
+| unet2d       | unet2d_notta   | test   | dice     |      0.928 |        0.926 |   0.002 |  50 |      0.0015  |
+| unet2d       | unet2d_notta   | test   | hd95     |      3.425 |        3.425 |  -0.001 |  50 |      0.27    |
+| unet2d       | unet2d_nopp    | cv     | dice     |      0.921 |        0.921 |   0     | 100 |      0.52    |
+| unet2d       | unet2d_nopp    | cv     | hd95     |      3.6   |        4.043 |  -0.443 | 100 |      0.91    |
+| unet2d       | unet2d_nopp    | test   | dice     |      0.928 |        0.928 |  -0.001 |  50 |      0.71    |
+| unet2d       | unet2d_nopp    | test   | hd95     |      3.425 |        3.291 |   0.133 |  50 |      0.26    |
+| unet2d_notta | classical_lgbm | cv     | dice     |      0.918 |        0.643 |   0.276 | 100 |      3.9e-18 |
+| unet2d_notta | classical_lgbm | cv     | hd95     |      3.696 |       18.371 | -14.674 | 100 |      3.9e-18 |
+| unet2d_notta | classical_lgbm | test   | dice     |      0.926 |        0.639 |   0.287 |  50 |      1.8e-15 |
+| unet2d_notta | classical_lgbm | test   | hd95     |      3.425 |       19.801 | -16.376 |  50 |      1.8e-15 |
+| unet2d_notta | unet2d         | cv     | dice     |      0.918 |        0.921 |  -0.003 | 100 |      1.3e-10 |
+| unet2d_notta | unet2d         | cv     | hd95     |      3.696 |        3.6   |   0.097 | 100 |      0.041   |
+| unet2d_notta | unet2d         | test   | dice     |      0.926 |        0.928 |  -0.002 |  50 |      0.0015  |
+| unet2d_notta | unet2d         | test   | hd95     |      3.425 |        3.425 |   0.001 |  50 |      0.27    |
+| unet2d_notta | unet25d        | cv     | dice     |      0.918 |        0.92  |  -0.002 | 100 |      0.0028  |
+| unet2d_notta | unet25d        | cv     | hd95     |      3.696 |        3.454 |   0.242 | 100 |      0.048   |
+| unet2d_notta | unet25d        | test   | dice     |      0.926 |        0.926 |   0     |  50 |      0.79    |
+| unet2d_notta | unet25d        | test   | hd95     |      3.425 |        3.514 |  -0.089 |  50 |      0.71    |
+| unet2d_notta | unet2d_noaug   | cv     | dice     |      0.918 |        0.906 |   0.012 | 100 |      1.9e-08 |
+| unet2d_notta | unet2d_noaug   | cv     | hd95     |      3.696 |        4.15  |  -0.454 | 100 |      0.053   |
+| unet2d_notta | unet2d_noaug   | test   | dice     |      0.926 |        0.916 |   0.01  |  50 |      5.8e-09 |
+| unet2d_notta | unet2d_noaug   | test   | hd95     |      3.425 |        4.236 |  -0.811 |  50 |      2.1e-05 |
+| unet2d_notta | unet2d_nopp    | cv     | dice     |      0.918 |        0.921 |  -0.002 | 100 |      5.6e-08 |
+| unet2d_notta | unet2d_nopp    | cv     | hd95     |      3.696 |        4.043 |  -0.346 | 100 |      0.25    |
+| unet2d_notta | unet2d_nopp    | test   | dice     |      0.926 |        0.928 |  -0.002 |  50 |      0.001   |
+| unet2d_notta | unet2d_nopp    | test   | hd95     |      3.425 |        3.291 |   0.134 |  50 |      0.16    |
 
 ### Clinical indices vs expert segmentation (Pearson r, bias, 95% limits of agreement, MAE)
 
@@ -137,6 +163,16 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet25d        | train   | MINF    |     0.885 |      0.898 |     0.964 |
 | unet25d        | train   | NOR     |     0.937 |      0.922 |     0.959 |
 | unet25d        | train   | RV      |     0.917 |      0.886 |     0.938 |
+| unet2d_noaug   | test    | DCM     |     0.933 |      0.892 |     0.971 |
+| unet2d_noaug   | test    | HCM     |     0.89  |      0.915 |     0.874 |
+| unet2d_noaug   | test    | MINF    |     0.882 |      0.901 |     0.963 |
+| unet2d_noaug   | test    | NOR     |     0.919 |      0.9   |     0.928 |
+| unet2d_noaug   | test    | RV      |     0.919 |      0.899 |     0.948 |
+| unet2d_noaug   | train   | DCM     |     0.903 |      0.884 |     0.968 |
+| unet2d_noaug   | train   | HCM     |     0.874 |      0.908 |     0.906 |
+| unet2d_noaug   | train   | MINF    |     0.855 |      0.88  |     0.953 |
+| unet2d_noaug   | train   | NOR     |     0.917 |      0.907 |     0.946 |
+| unet2d_noaug   | train   | RV      |     0.906 |      0.863 |     0.916 |
 | unet2d_notta   | test    | DCM     |     0.943 |      0.901 |     0.973 |
 | unet2d_notta   | test    | HCM     |     0.902 |      0.928 |     0.896 |
 | unet2d_notta   | test    | MINF    |     0.9   |      0.911 |     0.967 |
@@ -170,6 +206,9 @@ Data: 100 training patients (5-fold CV) and 50 test patients; slices per volume 
 | unet25d        | cv     | ent_fg   |         200 |       20 |             -0.574 |        0.762 |           0.92  |              0.926 |             14 |              0.93  |              7 |              0.932 |              5 |
 | unet25d        | test   | ent_fg   |         100 |       10 |             -0.584 |        0.8   |           0.926 |              0.928 |              7 |              0.932 |              5 |              0.936 |              3 |
 | unet25d        | test   | disagree |         100 |       10 |             -0.666 |        0.838 |           0.926 |              0.929 |              7 |              0.933 |              5 |              0.937 |              2 |
+| unet2d_noaug   | cv     | ent_fg   |         200 |       29 |             -0.222 |        0.691 |           0.906 |              0.911 |             22 |              0.915 |             16 |              0.915 |             13 |
+| unet2d_noaug   | test   | ent_fg   |         100 |       13 |             -0.597 |        0.79  |           0.916 |              0.919 |             10 |              0.921 |              8 |              0.924 |              4 |
+| unet2d_noaug   | test   | disagree |         100 |       13 |             -0.67  |        0.824 |           0.916 |              0.92  |              9 |              0.923 |              7 |              0.926 |              4 |
 | unet2d_notta   | cv     | ent_fg   |         200 |       20 |             -0.172 |        0.606 |           0.918 |              0.919 |             19 |              0.923 |             13 |              0.922 |             11 |
 | unet2d_notta   | test   | ent_fg   |         100 |        8 |             -0.567 |        0.821 |           0.926 |              0.93  |              5 |              0.933 |              3 |              0.936 |              2 |
 | unet2d_notta   | test   | disagree |         100 |        8 |             -0.719 |        0.841 |           0.926 |              0.93  |              5 |              0.934 |              3 |              0.938 |              1 |
@@ -201,6 +240,10 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | gt->classical_lgbm rf                         | test   | 0.54  | 0.400    | 0.680    |      0.509 | 1.382 |   0.693 | 0.237 | –        | –        |
 | classical_lgbm->classical_lgbm logreg         | test   | 0.58  | 0.440    | 0.720    |      0.577 | 1.324 |   0.593 | 0.131 | –        | –        |
 | classical_lgbm->classical_lgbm rf             | test   | 0.6   | 0.460    | 0.740    |      0.612 | 1.006 |   0.561 | 0.154 | –        | –        |
+| gt->unet2d_noaug logreg                       | test   | 0.92  | 0.840    | 0.980    |      0.92  | 0.361 |   0.136 | 0.04  | –        | –        |
+| gt->unet2d_noaug rf                           | test   | 0.94  | 0.860    | 1.000    |      0.94  | 0.359 |   0.171 | 0.125 | –        | –        |
+| unet2d_noaug->unet2d_noaug logreg             | test   | 0.98  | 0.940    | 1.000    |      0.98  | 0.238 |   0.081 | 0.063 | –        | –        |
+| unet2d_noaug->unet2d_noaug rf                 | test   | 0.9   | 0.800    | 0.980    |      0.9   | 0.331 |   0.154 | 0.078 | –        | –        |
 | cnn_s0                                        | test   | 0.84  | 0.740    | 0.940    |      0.84  | 0.443 |   0.21  | 0.113 | –        | –        |
 | cnn_s1                                        | test   | 0.86  | 0.760    | 0.960    |      0.861 | 0.438 |   0.205 | 0.066 | –        | –        |
 | cnn_s2                                        | test   | 0.84  | 0.720    | 0.940    |      0.841 | 0.405 |   0.223 | 0.076 | –        | –        |
@@ -231,6 +274,10 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | gt->classical_lgbm rf                         | cv     | 0.52  | 0.420    | 0.620    |      0.47  | 1.508 |   0.644 | 0.146 | –        | –        |
 | classical_lgbm->classical_lgbm logreg         | cv     | 0.62  | 0.520    | 0.710    |      0.616 | 1.298 |   0.576 | 0.106 | –        | –        |
 | classical_lgbm->classical_lgbm rf             | cv     | 0.63  | 0.530    | 0.730    |      0.628 | 0.989 |   0.509 | 0.058 | –        | –        |
+| gt->unet2d_noaug logreg                       | cv     | 0.91  | 0.850    | 0.960    |      0.91  | 0.257 |   0.145 | 0.045 | –        | –        |
+| gt->unet2d_noaug rf                           | cv     | 0.89  | 0.830    | 0.950    |      0.889 | 0.362 |   0.181 | 0.108 | –        | –        |
+| unet2d_noaug->unet2d_noaug logreg             | cv     | 0.92  | 0.860    | 0.970    |      0.921 | 0.206 |   0.115 | 0.026 | –        | –        |
+| unet2d_noaug->unet2d_noaug rf                 | cv     | 0.89  | 0.830    | 0.950    |      0.889 | 0.374 |   0.196 | 0.141 | –        | –        |
 | cnn_s0                                        | cv     | 0.74  | 0.650    | 0.830    |      0.737 | 1.013 |   0.425 | 0.191 | –        | –        |
 | cnn_s1                                        | cv     | 0.72  | 0.630    | 0.810    |      0.717 | 1.076 |   0.423 | 0.184 | –        | –        |
 | cnn_s2                                        | cv     | 0.74  | 0.650    | 0.820    |      0.735 | 0.837 |   0.383 | 0.165 | –        | –        |
@@ -275,6 +322,14 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | unet2d->unet2d logreg | classical_lgbm->classical_lgbm logreg         | test   |                      19 |                       1 |       0     |
 | unet2d->unet2d logreg | classical_lgbm->classical_lgbm rf             | cv     |                      31 |                       2 |       0     |
 | unet2d->unet2d logreg | classical_lgbm->classical_lgbm rf             | test   |                      17 |                       0 |       0     |
+| unet2d->unet2d logreg | gt->unet2d_noaug logreg                       | cv     |                       3 |                       2 |       1     |
+| unet2d->unet2d logreg | gt->unet2d_noaug logreg                       | test   |                       3 |                       2 |       1     |
+| unet2d->unet2d logreg | gt->unet2d_noaug rf                           | cv     |                       8 |                       5 |       0.581 |
+| unet2d->unet2d logreg | gt->unet2d_noaug rf                           | test   |                       1 |                       1 |       1     |
+| unet2d->unet2d logreg | unet2d_noaug->unet2d_noaug logreg             | cv     |                       4 |                       4 |       1     |
+| unet2d->unet2d logreg | unet2d_noaug->unet2d_noaug logreg             | test   |                       0 |                       2 |       0.5   |
+| unet2d->unet2d logreg | unet2d_noaug->unet2d_noaug rf                 | cv     |                       7 |                       4 |       0.549 |
+| unet2d->unet2d logreg | unet2d_noaug->unet2d_noaug rf                 | test   |                       2 |                       0 |       0.5   |
 | unet2d->unet2d logreg | cnn_s0                                        | cv     |                      20 |                       2 |       0     |
 | unet2d->unet2d logreg | cnn_s0                                        | test   |                       7 |                       2 |       0.18  |
 | unet2d->unet2d logreg | cnn_s1                                        | cv     |                      22 |                       2 |       0     |
@@ -346,3 +401,46 @@ Figures: `seg/fig_dice_box.png`, `seg/fig_bland_altman.png`, `seg/fig_examples_b
 | LV_EDV        |        0.043 |
 
 Figures: `cls/fig_confusion.png`, `cls/fig_coverage.png`, `cls/fig_gradcam.png`
+
+## 3. Robustness to image degradations (test set)
+
+| degradation   |   level |   diag_acc unet25d |   diag_acc unet2d |   diag_acc unet2d_noaug |   mean_dice unet25d |   mean_dice unet2d |   mean_dice unet2d_noaug |
+|:--------------|--------:|-------------------:|------------------:|------------------------:|--------------------:|-------------------:|-------------------------:|
+| bias          |    0.2  |               0.96 |              0.94 |                    0.98 |               0.924 |              0.925 |                    0.914 |
+| bias          |    0.4  |               0.96 |              0.94 |                    0.94 |               0.923 |              0.924 |                    0.914 |
+| bias          |    0.6  |               0.96 |              0.96 |                    0.92 |               0.918 |              0.919 |                    0.911 |
+| bias          |    0.8  |               0.96 |              0.92 |                    0.98 |               0.91  |              0.916 |                    0.903 |
+| blur          |    1    |               0.94 |              0.94 |                    0.94 |               0.924 |              0.926 |                    0.913 |
+| blur          |    2    |               0.96 |              0.94 |                    0.94 |               0.914 |              0.917 |                    0.892 |
+| blur          |    3    |               0.94 |              0.9  |                    0.86 |               0.888 |              0.892 |                    0.859 |
+| blur          |    4    |               0.84 |              0.82 |                    0.78 |               0.853 |              0.85  |                    0.818 |
+| clean         |    0    |               0.96 |              0.94 |                    0.98 |               0.925 |              0.926 |                    0.916 |
+| gamma         |    0.5  |               0.96 |              0.94 |                    0.94 |               0.924 |              0.924 |                    0.911 |
+| gamma         |    0.7  |               0.96 |              0.94 |                    0.92 |               0.925 |              0.926 |                    0.915 |
+| gamma         |    1.5  |               0.96 |              0.94 |                    0.98 |               0.924 |              0.925 |                    0.911 |
+| gamma         |    2    |               0.94 |              0.92 |                    0.96 |               0.921 |              0.922 |                    0.898 |
+| ghosting      |    2    |               0.96 |              0.94 |                    0.98 |               0.92  |              0.921 |                    0.909 |
+| ghosting      |    4    |               0.98 |              0.96 |                    0.94 |               0.908 |              0.911 |                    0.894 |
+| ghosting      |    8    |               0.96 |              0.96 |                    0.9  |               0.89  |              0.891 |                    0.872 |
+| ghosting      |   12    |               0.86 |              0.92 |                    0.94 |               0.869 |              0.869 |                    0.852 |
+| lowres        |    1.5  |               0.94 |              0.96 |                    0.96 |               0.915 |              0.918 |                    0.905 |
+| lowres        |    2    |               0.96 |              0.96 |                    0.94 |               0.916 |              0.918 |                    0.903 |
+| lowres        |    3    |               0.96 |              0.92 |                    0.92 |               0.898 |              0.899 |                    0.876 |
+| lowres        |    4    |               0.92 |              0.92 |                    0.84 |               0.873 |              0.873 |                    0.853 |
+| noise         |    0.02 |               0.96 |              0.96 |                    0.96 |               0.923 |              0.924 |                    0.914 |
+| noise         |    0.05 |               0.96 |              0.96 |                    0.96 |               0.919 |              0.92  |                    0.902 |
+| noise         |    0.1  |               0.98 |              0.94 |                    0.88 |               0.905 |              0.902 |                    0.86  |
+| noise         |    0.15 |               0.96 |              0.92 |                    0.78 |               0.879 |              0.866 |                    0.781 |
+
+Figures: `robustness/fig_robustness.png`, `robustness/fig_degradations.png`
+
+## 4. Complexity
+
+| model                                  |   params_M |   gflops_per_slice_256 |   train_gpu_min_per_model |   n_models |   infer_gpu_s_1model |   infer_gpu_s_ensemble_tta |   infer_cpu_s_1model |   n_trees |   train_cpu_min_all_folds |   infer_cpu_s_features |   gflops_per_patient |   n_slices |   fit_cpu_s_incl_grid_search |
+|:---------------------------------------|-----------:|-----------------------:|--------------------------:|-----------:|---------------------:|---------------------------:|---------------------:|----------:|--------------------------:|-----------------------:|---------------------:|-----------:|-----------------------------:|
+| U-Net (unet2d)                         |     33.475 |                 29.548 |                    78.138 |          5 |                0.054 |                      0.561 |                5.908 |       nan |                   nan     |                nan     |              nan     |        nan |                      nan     |
+| U-Net (unet25d)                        |     33.475 |                 29.624 |                    77.243 |          5 |                0.039 |                      0.546 |                5.855 |       nan |                   nan     |                nan     |              nan     |        nan |                      nan     |
+| U-Net (unet2d_noaug)                   |     33.475 |                 29.548 |                    72.698 |          5 |                0.035 |                      0.539 |                5.789 |       nan |                   nan     |                nan     |              nan     |        nan |                      nan     |
+| classical pixel classifier (LightGBM)  |    nan     |                nan     |                   nan     |          5 |              nan     |                    nan     |               37.994 |      1380 |                     4.529 |                  0.468 |              nan     |        nan |                      nan     |
+| end-to-end CNN (ResNet-18 slices)      |     11.182 |                nan     |                     0.516 |          5 |                0.003 |                    nan     |                0.157 |       nan |                   nan     |                nan     |               47.375 |         10 |                      nan     |
+| cardiac features + logistic regression |      0     |                nan     |                   nan     |        nan |              nan     |                    nan     |                0.033 |       nan |                   nan     |                nan     |              nan     |        nan |                        7.328 |

@@ -207,8 +207,11 @@ def main():
     dfs = {c: pd.read_csv(OUT / f"{c}_metrics.csv") for c in cfgs}
     s = summary(dfs)
     s.to_csv(OUT / "seg_summary.csv", index=False)
-    if args.ref in dfs:
-        paired_tests(dfs, args.ref).to_csv(OUT / "seg_paired_tests.csv", index=False)
+    # paired tests against the main model, and against the main model without TTA (fair reference for models that
+    # are predicted without TTA, e.g. the no-augmentation ablation)
+    refs = [r for r in (args.ref, f"{args.ref}_notta") if r in dfs]
+    if refs:
+        pd.concat([paired_tests(dfs, r) for r in refs]).to_csv(OUT / "seg_paired_tests.csv", index=False)
     clin = clinical(cfgs)
     clin.to_csv(OUT / "clinical_agreement.csv", index=False)
     slice_position(cfgs).to_csv(OUT / "slice_position.csv", index=False)
