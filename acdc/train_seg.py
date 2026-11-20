@@ -83,7 +83,7 @@ def main():
     ap.add_argument("--in_ch", type=int, default=1)
     ap.add_argument("--loss", choices=["dce", "ce"], default="dce")
     ap.add_argument("--aug", choices=["full", "none"], default="full")
-    ap.add_argument("--epochs", type=int, default=300)
+    ap.add_argument("--epochs", type=int, default=250)  # all reported models: 250
     ap.add_argument("--iters", type=int, default=250)
     ap.add_argument("--bs", type=int, default=32)
     ap.add_argument("--lr", type=float, default=0.01)

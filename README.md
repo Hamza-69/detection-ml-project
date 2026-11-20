@@ -63,7 +63,6 @@ early stopping or checkpoint selection on validation data (last-epoch models). D
 | `complexity` | Parameters, FLOPs, training time, inference time per patient on GPU and CPU. |
 | `export_models`, `app`, `test_deploy` | Packages the final models; Gradio demo (upload ED/ES NIfTI or pick an ACDC test patient → contours, indices, both diagnoses, Grad-CAM, uncertainty warning). `deploy/` = Dockerfile + `fly.toml` (CPU). `test_deploy` times the live demo. See [Demo](#demo). |
 
-Results (tables, figures, per-patient predictions) are in [`results/`](results/); `results/summary.md` collects them.
 
 ## Demo
 
@@ -91,22 +90,53 @@ uses `performance` CPUs.)
 
 ## Reproduce
 
+Hardware used: 1x NVIDIA L40S (46 GB), 8 vCPU, 61 GB RAM. Total compute ~30 GPU-hours (each U-Net fold ~78 min;
+5 configurations x 5 folds) plus ~3 CPU-hours. Every command below is exactly what produced `results/`; each step
+writes its own files, so steps can be re-run independently. To only re-check the tables and figures from the stored
+predictions, skip the training steps (the trained weights are in the release, see [Demo](#demo)).
+
 ```bash
-uv sync                                                    # Python 3.14, torch 2.11 (CUDA 12.8), see pyproject.toml / uv.lock
+# 0) environment and data
+uv sync                                    # Python 3.14, torch 2.11 + CUDA 12.8, exact versions in uv.lock
 curl -L -o ACDC.zip https://humanheart-project.creatis.insa-lyon.fr/database/api/v1/collection/637218c173e9f0047faa00fb/download
-unzip ACDC.zip -d raw                                      # then set ACDC_ROOT=<...>/raw/ACDC/database, ACDC_WORK=<cache dir>
-uv run python -m acdc.prepare
-for f in 0 1 2 3 4; do uv run python -m acdc.train_seg --cfg unet2d --fold $f; done
-uv run python -m acdc.predict_seg --cfg unet2d
-uv run python -m acdc.tune_seg_baseline            # optional: pick the baseline's LightGBM settings
-uv run python -m acdc.seg_baseline
-acdc/run_cls_all.sh                                        # 25 end-to-end CNN runs
-uv run python -m acdc.classify --sources unet2d classical_lgbm
-uv run python -m acdc.evaluate_seg --cfgs classical_lgbm unet2d
-uv run python -m acdc.evaluate_cls --seg_cfgs unet2d classical_lgbm
-uv run python -m acdc.robustness && uv run python -m acdc.gradcam && uv run python -m acdc.complexity
-uv run python -m acdc.split_sensitivity && uv run python -m acdc.summarize
-uv run python -m acdc.export_models --out deploy/models && uv run python -m acdc.app --models_dir deploy/models
+unzip ACDC.zip -d raw
+export ACDC_ROOT=$PWD/raw/ACDC/database ACDC_WORK=$PWD/work   # data and cache/checkpoint folders
+uv run python -m acdc.prepare              # resampling, cache, frozen 5-fold split (results/acdc_meta.csv)
+
+# 1) U-Net: main model + ablations (5 folds each, GPU)
+for f in 0 1 2 3 4; do
+  uv run python -m acdc.train_seg --cfg unet2d       --fold $f --epochs 250              # main 2D U-Net
+  uv run python -m acdc.train_seg --cfg unet25d      --fold $f --epochs 250 --in_ch 3    # 2.5D input
+  uv run python -m acdc.train_seg --cfg unet2d_ce    --fold $f --epochs 250 --loss ce    # CE loss only
+  uv run python -m acdc.train_seg --cfg unet2d_noaug --fold $f --epochs 250 --aug none   # no augmentation
+done
+uv run python -m acdc.predict_seg --cfg unet2d                 # + --no_tta / --no_pp for the two inference ablations
+uv run python -m acdc.predict_seg --cfg unet2d --no_tta
+uv run python -m acdc.predict_seg --cfg unet2d --no_pp
+for c in unet25d unet2d_ce unet2d_noaug; do uv run python -m acdc.predict_seg --cfg $c; done
+
+# 2) classical segmentation baseline (CPU)
+uv run python -m acdc.tune_seg_baseline --threads 6            # LightGBM grid (training patients only)
+uv run python -m acdc.seg_baseline --threads 6
+
+# 3) diagnosis: end-to-end CNN (25 short GPU runs) and feature-based classifiers
+bash acdc/run_cls_all.sh
+uv run python -m acdc.classify --sources unet2d classical_lgbm unet25d unet2d_noaug unet2d_ce
+
+# 4) evaluation, failure analysis, complexity, summary
+uv run python -m acdc.evaluate_seg --cfgs classical_lgbm unet2d unet25d unet2d_noaug unet2d_ce unet2d_notta unet2d_nopp
+uv run python -m acdc.evaluate_cls --seg_cfgs unet2d unet25d classical_lgbm unet2d_noaug unet2d_ce
+uv run python -m acdc.robustness --cfgs unet2d unet2d_noaug unet25d
+uv run python -m acdc.gradcam
+uv run python -m acdc.split_sensitivity
+uv run python -m acdc.complexity
+uv run python -m acdc.summarize                                # -> results/summary.md
+
+# 5) final models and demo
+uv run python -m acdc.export_models --out deploy/models
+uv run python -m acdc.app --models_dir deploy/models
 ```
 
-`acdc/run_queue.sh` runs a list of GPU jobs one after another (one job saturates the GPU).
+Notebook: `uv run --with jupyter jupyter lab ACDC_project.ipynb` (set the `RUN` flags in the first code cell to re-run
+steps from inside the notebook). Helpers used on our machine, not needed to reproduce: `acdc/run_queue.sh` (runs a
+list of GPU jobs one after another) and `acdc/finalize.sh` (re-runs step 4 and commits the results).
