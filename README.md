@@ -67,7 +67,7 @@ has `acdc_models.tar.gz` (the five fold U-Nets, the five end-to-end CNNs, the di
 the five example patients). Run the demo locally without retraining:
 
 ```bash
-curl -LO https://github.com/Hamza-69/detection-ml-project/releases/download/v1.0-final/acdc_models.tar.gz
+gh release download v1.0-final -R Hamza-69/detection-ml-project -p acdc_models.tar.gz   # or download it from the release page
 mkdir -p deploy/models && tar -xzf acdc_models.tar.gz -C deploy/models
 uv run python -m acdc.app --models_dir deploy/models               # http://127.0.0.1:7860 (GPU if available)
 # or the same container as the live demo (CPU only):
