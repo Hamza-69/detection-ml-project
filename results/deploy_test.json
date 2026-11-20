@@ -1,0 +1,32 @@
+{
+  "url": "https://acdc-cardiac-aub.fly.dev/",
+  "server": "Fly.io performance-2x (2 dedicated CPUs, 4 GB RAM), region fra",
+  "patient": "patient101",
+  "reference_group": "DCM",
+  "first_page_load_seconds": 16.9,
+  "calls": [
+    {
+      "call": "single_first",
+      "ensemble": false,
+      "seconds": 25.5,
+      "pred_two_stage": "DCM (dilated cardiomyopathy)",
+      "pred_cnn": "DCM (dilated cardiomyopathy)"
+    },
+    {
+      "call": "single_warm",
+      "ensemble": false,
+      "seconds": 17.9,
+      "pred_two_stage": "DCM (dilated cardiomyopathy)",
+      "pred_cnn": "DCM (dilated cardiomyopathy)"
+    },
+    {
+      "call": "ensemble",
+      "ensemble": true,
+      "seconds": 71.5,
+      "pred_two_stage": "DCM (dilated cardiomyopathy)",
+      "pred_cnn": "DCM (dilated cardiomyopathy)"
+    }
+  ],
+  "date_utc": "2026-11-20 16:13",
+  "note": "wall-clock from an AWS client incl. upload; first_page_load includes machine start if it was stopped; single_first includes lazy model loading"
+}

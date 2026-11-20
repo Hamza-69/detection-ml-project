@@ -50,9 +50,33 @@ early stopping or checkpoint selection on validation data (last-epoch models). D
 | `robustness` | Six degradation types × 4 severities applied to raw test images, full pipeline re-run: Dice and diagnosis accuracy. |
 | `gradcam` | Grad-CAM of the end-to-end CNN vs the expert heart contours (energy in heart, enrichment, pointing game). |
 | `complexity` | Parameters, FLOPs, training time, inference time per patient on GPU and CPU. |
-| `export_models`, `app` | Packages the final models; Gradio demo (upload ED/ES NIfTI or pick an ACDC test patient → contours, indices, both diagnoses, Grad-CAM, uncertainty warning). `deploy/` = Dockerfile + `fly.toml` (CPU). |
+| `export_models`, `app`, `test_deploy` | Packages the final models; Gradio demo (upload ED/ES NIfTI or pick an ACDC test patient → contours, indices, both diagnoses, Grad-CAM, uncertainty warning). `deploy/` = Dockerfile + `fly.toml` (CPU). `test_deploy` times the live demo. See [Demo](#demo). |
 
 Results (tables, figures, per-patient predictions) are in [`results/`](results/); `results/summary.md` collects them.
+
+## Demo
+
+**Live:** <https://acdc-cardiac-aub.fly.dev/> (Fly.io, 2 dedicated CPUs / 4 GB, stops when idle). Pick one of five ACDC
+test patients (one per group) or upload your own ED and ES frames (`.nii` / `.nii.gz`) with height and weight. It shows
+the contours, clinical indices, the diagnosis from both pipelines, a Grad-CAM map and an uncertainty warning.
+Measured from a client (`results/deploy_test.json`, made by `python -m acdc.test_deploy`): ~17 s to wake a stopped
+machine, ~18 s per patient with one model, ~72 s with the 5-model ensemble. Course project, not for clinical use.
+
+**Trained models:** the release [`v1.0-final`](https://github.com/Hamza-69/detection-ml-project/releases/tag/v1.0-final)
+has `acdc_models.tar.gz` (the five fold U-Nets, the five end-to-end CNNs, the diagnosis classifier, `config.json`, and
+the five example patients). Run the demo locally without retraining:
+
+```bash
+curl -LO https://github.com/Hamza-69/detection-ml-project/releases/download/v1.0-final/acdc_models.tar.gz
+mkdir -p deploy/models && tar -xzf acdc_models.tar.gz -C deploy/models
+uv run python -m acdc.app --models_dir deploy/models               # http://127.0.0.1:7860 (GPU if available)
+# or the same container as the live demo (CPU only):
+docker build -f deploy/Dockerfile -t acdc-demo . && docker run -p 7860:7860 acdc-demo
+```
+
+Redeploy to Fly: `fly deploy . --config deploy/fly.toml --dockerfile deploy/Dockerfile --remote-only --ha=false`.
+(On Fly's `shared` CPUs the app was throttled to ~7% of the CPU and one patient took over 10 minutes, so `fly.toml`
+uses `performance` CPUs.)
 
 ## Reproduce
 
