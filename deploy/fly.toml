@@ -11,6 +11,6 @@ primary_region = "fra"
   min_machines_running = 0
 
 [[vm]]
-  cpu_kind = "shared"
+  cpu_kind = "performance"  # dedicated cores: "shared" was throttled to ~7% CPU (15 s run -> >10 min)
   cpus = 2
   memory = "4gb"
