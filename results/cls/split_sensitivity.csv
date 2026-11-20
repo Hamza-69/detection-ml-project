@@ -1,0 +1,121 @@
+protocol,source,label,seed,acc,macro_f1,nll
+"A: CV, re-drawn folds",gt,expert masks (oracle),1,0.94,0.9399624765478425,0.13369949768353812
+"A: CV, re-drawn folds",gt,expert masks (oracle),2,0.96,0.9602376485303313,0.10351355768373685
+"A: CV, re-drawn folds",gt,expert masks (oracle),3,0.95,0.9501831501831501,0.14994165514004043
+"A: CV, re-drawn folds",gt,expert masks (oracle),4,0.99,0.9899937460913071,0.07930484877218649
+"A: CV, re-drawn folds",gt,expert masks (oracle),5,0.95,0.95,0.13630451033887567
+"A: CV, re-drawn folds",gt,expert masks (oracle),6,0.97,0.9697175866495507,0.10872796327686922
+"A: CV, re-drawn folds",gt,expert masks (oracle),7,0.94,0.9394809255784866,0.1497673894455062
+"A: CV, re-drawn folds",gt,expert masks (oracle),8,0.95,0.9497373358348968,0.08671840125758717
+"A: CV, re-drawn folds",gt,expert masks (oracle),9,0.94,0.9399687304565353,0.1492343118585878
+"A: CV, re-drawn folds",gt,expert masks (oracle),10,0.96,0.959993746091307,0.10154859424213603
+B: random 100/50 split,gt,expert masks (oracle),1,0.94,0.9397129186602872,0.1350957712458839
+B: random 100/50 split,gt,expert masks (oracle),2,0.96,0.9599498746867168,0.10081674601418085
+B: random 100/50 split,gt,expert masks (oracle),3,0.94,0.9395458342826764,0.1753993306078105
+B: random 100/50 split,gt,expert masks (oracle),4,0.94,0.9411645054665649,0.1376789442141856
+B: random 100/50 split,gt,expert masks (oracle),5,0.94,0.9399498746867166,0.20759161615162966
+B: random 100/50 split,gt,expert masks (oracle),6,0.88,0.8799574694311536,0.2337775518207842
+B: random 100/50 split,gt,expert masks (oracle),7,0.96,0.9595959595959596,0.2842335713350921
+B: random 100/50 split,gt,expert masks (oracle),8,0.94,0.9388972431077693,0.12354230168190343
+B: random 100/50 split,gt,expert masks (oracle),9,0.98,0.9799498746867169,0.09227050250429066
+B: random 100/50 split,gt,expert masks (oracle),10,0.98,0.9799498746867167,0.09960308891970003
+B: random 100/50 split,gt,expert masks (oracle),11,0.96,0.9598997493734336,0.13426533536094903
+B: random 100/50 split,gt,expert masks (oracle),12,0.94,0.9399498746867166,0.10756144885619551
+B: random 100/50 split,gt,expert masks (oracle),13,0.98,0.9799498746867169,0.12291418989224136
+B: random 100/50 split,gt,expert masks (oracle),14,1.0,1.0,0.06213608225152263
+B: random 100/50 split,gt,expert masks (oracle),15,0.92,0.9174603174603174,0.3032353698219264
+B: random 100/50 split,gt,expert masks (oracle),16,0.96,0.9595959595959596,0.13716349389896138
+B: random 100/50 split,gt,expert masks (oracle),17,0.92,0.9183261183261182,0.12127086349878584
+B: random 100/50 split,gt,expert masks (oracle),18,0.96,0.9598997493734336,0.10931603896919315
+B: random 100/50 split,gt,expert masks (oracle),19,0.92,0.9211143801532817,0.2655123131332022
+B: random 100/50 split,gt,expert masks (oracle),20,0.98,0.9799498746867167,0.22975064205322962
+"A: CV, re-drawn folds",unet2d,U-Net masks,1,0.93,0.9298656749207546,0.19443308573857165
+"A: CV, re-drawn folds",unet2d,U-Net masks,2,0.93,0.9307191994996874,0.19495213007004672
+"A: CV, re-drawn folds",unet2d,U-Net masks,3,0.92,0.9193144363876071,0.24933174055797708
+"A: CV, re-drawn folds",unet2d,U-Net masks,4,0.92,0.9199624765478424,0.2055820825889169
+"A: CV, re-drawn folds",unet2d,U-Net masks,5,0.94,0.9396612074275745,0.1754865218271185
+"A: CV, re-drawn folds",unet2d,U-Net masks,6,0.91,0.9099499687304565,0.2423366921299607
+"A: CV, re-drawn folds",unet2d,U-Net masks,7,0.92,0.9204815509693558,0.2610686894773812
+"A: CV, re-drawn folds",unet2d,U-Net masks,8,0.93,0.9290132306921871,0.2538736318462298
+"A: CV, re-drawn folds",unet2d,U-Net masks,9,0.93,0.9302063789868669,0.26539663867928165
+"A: CV, re-drawn folds",unet2d,U-Net masks,10,0.93,0.9297069597069598,0.17972744385550535
+B: random 100/50 split,unet2d,U-Net masks,1,0.96,0.96,0.20302108557814968
+B: random 100/50 split,unet2d,U-Net masks,2,0.92,0.9203615098351939,0.2359645135940691
+B: random 100/50 split,unet2d,U-Net masks,3,0.92,0.9185688005179189,0.16572976909361345
+B: random 100/50 split,unet2d,U-Net masks,4,0.96,0.9595959595959596,0.12151426306214659
+B: random 100/50 split,unet2d,U-Net masks,5,0.96,0.96,0.2672638412677568
+B: random 100/50 split,unet2d,U-Net masks,6,0.86,0.8605847953216375,0.2889132589094773
+B: random 100/50 split,unet2d,U-Net masks,7,0.9,0.8984126984126984,0.35231501477637833
+B: random 100/50 split,unet2d,U-Net masks,8,0.94,0.9388972431077693,0.16335352155328206
+B: random 100/50 split,unet2d,U-Net masks,9,0.92,0.9209022556390977,0.2390237980512069
+B: random 100/50 split,unet2d,U-Net masks,10,0.96,0.96,0.19704266624947223
+B: random 100/50 split,unet2d,U-Net masks,11,0.94,0.9395458342826764,0.14310362324881518
+B: random 100/50 split,unet2d,U-Net masks,12,0.94,0.9396825396825396,0.17168231388822114
+B: random 100/50 split,unet2d,U-Net masks,13,0.94,0.9407154249259511,0.2058196605470626
+B: random 100/50 split,unet2d,U-Net masks,14,0.98,0.9799498746867167,0.10524582075836932
+B: random 100/50 split,unet2d,U-Net masks,15,0.9,0.8997493734335841,0.35208762508548064
+B: random 100/50 split,unet2d,U-Net masks,16,0.94,0.9397129186602872,0.18232254611261356
+B: random 100/50 split,unet2d,U-Net masks,17,0.92,0.9196627933470038,0.21816648987649642
+B: random 100/50 split,unet2d,U-Net masks,18,0.92,0.9173737373737373,0.215747664138306
+B: random 100/50 split,unet2d,U-Net masks,19,0.92,0.9191919191919192,0.25706208707738165
+B: random 100/50 split,unet2d,U-Net masks,20,0.96,0.96,0.17164785966782817
+"A: CV, re-drawn folds",classical_lgbm,classical masks,1,0.57,0.5632404181184668,1.191247408163768
+"A: CV, re-drawn folds",classical_lgbm,classical masks,2,0.6,0.6006581651125938,1.159459810599355
+"A: CV, re-drawn folds",classical_lgbm,classical masks,3,0.59,0.5883124627310674,1.1406199716024867
+"A: CV, re-drawn folds",classical_lgbm,classical masks,4,0.61,0.5971872030408616,1.2890804586845621
+"A: CV, re-drawn folds",classical_lgbm,classical masks,5,0.6,0.6049364185949552,1.2036453021381366
+"A: CV, re-drawn folds",classical_lgbm,classical masks,6,0.61,0.6081130581130582,1.1599953483469283
+"A: CV, re-drawn folds",classical_lgbm,classical masks,7,0.58,0.5771507254887857,1.3238903346044393
+"A: CV, re-drawn folds",classical_lgbm,classical masks,8,0.61,0.6085759918798699,1.3274194609964112
+"A: CV, re-drawn folds",classical_lgbm,classical masks,9,0.6,0.5900400275783145,1.2033218758649022
+"A: CV, re-drawn folds",classical_lgbm,classical masks,10,0.59,0.5865272938443671,1.1203133123318862
+B: random 100/50 split,classical_lgbm,classical masks,1,0.56,0.5277235731469141,1.0636490175586308
+B: random 100/50 split,classical_lgbm,classical masks,2,0.66,0.664360902255639,1.345434313215186
+B: random 100/50 split,classical_lgbm,classical masks,3,0.42,0.4073376623376623,1.315585538734097
+B: random 100/50 split,classical_lgbm,classical masks,4,0.6,0.5774603174603175,1.206504747805886
+B: random 100/50 split,classical_lgbm,classical masks,5,0.58,0.5689726991274979,1.5325020664164848
+B: random 100/50 split,classical_lgbm,classical masks,6,0.6,0.6056306774842245,1.383361801562811
+B: random 100/50 split,classical_lgbm,classical masks,7,0.48,0.46868307131465026,1.2323452276020566
+B: random 100/50 split,classical_lgbm,classical masks,8,0.62,0.6090252368890139,1.1290214026253467
+B: random 100/50 split,classical_lgbm,classical masks,9,0.68,0.6752153110047848,1.0541869922435974
+B: random 100/50 split,classical_lgbm,classical masks,10,0.64,0.6042305764411028,1.0180071271008044
+B: random 100/50 split,classical_lgbm,classical masks,11,0.5,0.455859649122807,1.091337795123104
+B: random 100/50 split,classical_lgbm,classical masks,12,0.6,0.580672268907563,1.0236157056533903
+B: random 100/50 split,classical_lgbm,classical masks,13,0.52,0.5354405398523047,1.1717001177887163
+B: random 100/50 split,classical_lgbm,classical masks,14,0.58,0.5404257964257964,1.178240891180906
+B: random 100/50 split,classical_lgbm,classical masks,15,0.58,0.5953408029878617,1.0799382549633558
+B: random 100/50 split,classical_lgbm,classical masks,16,0.54,0.5450154798761611,1.2795224795141105
+B: random 100/50 split,classical_lgbm,classical masks,17,0.54,0.5389640108175577,1.3929582932655777
+B: random 100/50 split,classical_lgbm,classical masks,18,0.54,0.5390777338603426,1.1243086492355285
+B: random 100/50 split,classical_lgbm,classical masks,19,0.56,0.5568922305764411,1.2234794362888213
+B: random 100/50 split,classical_lgbm,classical masks,20,0.62,0.5942995169082126,1.1137495687329955
+"A: CV, re-drawn folds",image,image features (no segm.),1,0.34,0.338061022695169,1.6697091720532893
+"A: CV, re-drawn folds",image,image features (no segm.),2,0.41,0.40885791715060005,1.6415792052181377
+"A: CV, re-drawn folds",image,image features (no segm.),3,0.4,0.3956911615448201,1.5950267959239077
+"A: CV, re-drawn folds",image,image features (no segm.),4,0.44,0.4344447657605552,1.5230761967790771
+"A: CV, re-drawn folds",image,image features (no segm.),5,0.39,0.38742633668686743,1.6461633182129232
+"A: CV, re-drawn folds",image,image features (no segm.),6,0.35,0.34513028976443605,1.6371163477827404
+"A: CV, re-drawn folds",image,image features (no segm.),7,0.41,0.4069105384894859,1.6705594221720645
+"A: CV, re-drawn folds",image,image features (no segm.),8,0.35,0.3487033249164186,1.715856659277402
+"A: CV, re-drawn folds",image,image features (no segm.),9,0.38,0.37584541784798525,1.7665784476801465
+"A: CV, re-drawn folds",image,image features (no segm.),10,0.37,0.36799744912710247,1.6523911995296345
+B: random 100/50 split,image,image features (no segm.),1,0.44,0.43681849551414764,1.3486992144935894
+B: random 100/50 split,image,image features (no segm.),2,0.4,0.3914606422279057,1.5509261115872206
+B: random 100/50 split,image,image features (no segm.),3,0.24,0.2448317764107238,1.6731239452367241
+B: random 100/50 split,image,image features (no segm.),4,0.46,0.4396464646464646,1.3761229887560702
+B: random 100/50 split,image,image features (no segm.),5,0.36,0.3648212898212898,1.7964542565782176
+B: random 100/50 split,image,image features (no segm.),6,0.4,0.4028011204481793,1.4453504767159275
+B: random 100/50 split,image,image features (no segm.),7,0.48,0.47194771241830064,1.4336191268355336
+B: random 100/50 split,image,image features (no segm.),8,0.44,0.42397080044138863,1.4648951290336356
+B: random 100/50 split,image,image features (no segm.),9,0.38,0.3733574879227053,1.399357415613272
+B: random 100/50 split,image,image features (no segm.),10,0.46,0.4459536541889483,1.362927362508263
+B: random 100/50 split,image,image features (no segm.),11,0.34,0.32390338164251203,1.588447298812057
+B: random 100/50 split,image,image features (no segm.),12,0.42,0.422020202020202,1.3536169866586314
+B: random 100/50 split,image,image features (no segm.),13,0.48,0.4701010101010101,1.4024150625521994
+B: random 100/50 split,image,image features (no segm.),14,0.54,0.5448794038106193,1.324025183632164
+B: random 100/50 split,image,image features (no segm.),15,0.5,0.4965538847117795,1.5299605309925368
+B: random 100/50 split,image,image features (no segm.),16,0.44,0.44475256769374416,1.4148415008424775
+B: random 100/50 split,image,image features (no segm.),17,0.32,0.3233614338877496,1.627796370232892
+B: random 100/50 split,image,image features (no segm.),18,0.52,0.5215204678362573,1.1909616855107457
+B: random 100/50 split,image,image features (no segm.),19,0.3,0.29206712433257054,1.4935375025506419
+B: random 100/50 split,image,image features (no segm.),20,0.4,0.38763447407948687,1.516258672526961

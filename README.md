@@ -4,7 +4,7 @@ AUB Machine Learning course project (Fall 2026) — Mohammad Alaa Al Din Al Hamw
 
 > **Dataset change.** Milestone 2 used VinDr-CXR. The official VinDr-CXR test labels (PhysioNet, credentialed access) could
 > not be obtained, so the final project uses the alternative dataset proposed by the course staff: **ACDC** (Automated
-> Cardiac Diagnosis Challenge, MICCAI 2017). The VinDr-CXR code and its README are kept in [`vindr/`](vindr/).
+> Cardiac Diagnosis Challenge, MICCAI 2017). The VinDr-CXR code and its README are kept on the branch [`vindr-milestone2`](https://github.com/Hamza-69/detection-ml-project/tree/vindr-milestone2/vindr).
 
 **Data.** 150 patients, cine short-axis MRI, evenly split into 5 groups: normal (NOR), previous myocardial infarction
 (MINF), dilated cardiomyopathy (DCM), hypertrophic cardiomyopathy (HCM), abnormal right ventricle (RV). Expert contours of
@@ -44,7 +44,6 @@ early stopping or checkpoint selection on validation data (last-epoch models). D
 | [`acdc/`](acdc/) | The pipeline, one module per step (table below) |
 | [`results/`](results/) | Every table, figure and per-patient prediction behind the reported numbers; [`summary.md`](results/summary.md) collects them |
 | [`deploy/`](deploy/) | CPU Docker image and Fly.io config for the demo (model weights: see [Demo](#demo)) |
-| [`vindr/`](vindr/) | Milestone-2 code on VinDr-CXR (before the dataset change), kept for reference |
 
 ## Pipeline
 

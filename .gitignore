@@ -8,7 +8,7 @@ exports/
 local_results/
 
 # VinDr-CXR (milestone 2) artefacts
-vindr/deploy/models/
+vindr/
 yolov8s.pt
 
 # ACDC: model weights and large arrays stay out of git (published as release assets instead)

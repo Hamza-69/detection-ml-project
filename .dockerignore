@@ -1,7 +1,6 @@
 .venv
 .git
 __pycache__
-vindr
 local_results
 results
 report
