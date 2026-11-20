@@ -1,0 +1,19 @@
+{
+  "params": {
+    "objective": "multiclass",
+    "num_class": 4,
+    "learning_rate": 0.1,
+    "num_leaves": 31,
+    "min_child_samples": 200,
+    "feature_fraction": 0.8,
+    "bagging_fraction": 0.8,
+    "bagging_freq": 1,
+    "lambda_l2": 1.0,
+    "verbose": -1
+  },
+  "cv_dice_sampled": 0.6503631012267297,
+  "cv_dice_sampled_sd_over_folds": 0.028753829773537635,
+  "original_cv_dice_sampled": 0.6345093302785118,
+  "n_configs": 12,
+  "minutes": 58.53128480911255
+}

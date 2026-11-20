@@ -483,3 +483,39 @@ Figures: `robustness/fig_robustness.png`, `robustness/fig_degradations.png`
 | classical pixel classifier (LightGBM)  |    nan     |                nan     |                   nan     |          5 |              nan     |                    nan     |               37.994 |      1380 |                     4.529 |                  0.468 |              nan     |        nan |                      nan     |
 | end-to-end CNN (ResNet-18 slices)      |     11.182 |                nan     |                     0.516 |          5 |                0.003 |                    nan     |                0.157 |       nan |                   nan     |                nan     |               47.375 |         10 |                      nan     |
 | cardiac features + logistic regression |      0     |                nan     |                   nan     |        nan |              nan     |                    nan     |                0.033 |       nan |                   nan     |                nan     |              nan     |        nan |                        7.328 |
+
+## 5. Sensitivity to the split (diagnosis, logistic regression)
+
+A = nested CV with 10 re-drawn fold assignments; B = 20 random stratified 100/50 train/test splits of all 150 patients. Segmentations are not re-trained per split.
+
+| protocol               | source         |   acc_mean |   acc_sd |   acc_min |   acc_max |   nll_mean |   n |   acc_official |   unet2d_minus_this_mean | unet2d_better_in   |
+|:-----------------------|:---------------|-----------:|---------:|----------:|----------:|-----------:|----:|---------------:|-------------------------:|:-------------------|
+| A: CV, re-drawn folds  | classical_lgbm |      0.596 |    0.013 |      0.57 |      0.61 |      1.212 |  10 |           0.62 |                    0.33  | 10/10 (ties 0)     |
+| A: CV, re-drawn folds  | gt             |      0.955 |    0.016 |      0.94 |      0.99 |      0.12  |  10 |           0.97 |                   -0.029 | 0/10 (ties 0)      |
+| A: CV, re-drawn folds  | image          |      0.384 |    0.032 |      0.34 |      0.44 |      1.652 |  10 |           0.43 |                    0.542 | 10/10 (ties 0)     |
+| A: CV, re-drawn folds  | unet2d         |      0.926 |    0.008 |      0.91 |      0.94 |      0.222 |  10 |           0.92 |                  nan     | nan                |
+| B: random 100/50 split | classical_lgbm |      0.571 |    0.062 |      0.42 |      0.68 |      1.198 |  20 |           0.58 |                    0.362 | 20/20 (ties 0)     |
+| B: random 100/50 split | gt             |      0.95  |    0.028 |      0.88 |      1    |      0.159 |  20 |           0.96 |                   -0.017 | 3/20 (ties 4)      |
+| B: random 100/50 split | image          |      0.416 |    0.077 |      0.24 |      0.54 |      1.465 |  20 |           0.48 |                    0.517 | 20/20 (ties 0)     |
+| B: random 100/50 split | unet2d         |      0.933 |    0.028 |      0.86 |      0.98 |      0.213 |  20 |           0.94 |                  nan     | nan                |
+
+Figure: `cls/fig_split_sensitivity.png`
+
+## 6. Tuning of the classical segmentation baseline (5-fold CV, training patients only)
+
+Dice estimated on 30,000 random pixels per held-out volume (no post-processing). Reported baseline: 63 leaves, lr 0.05, 50 min samples.
+
+|   num_leaves |   learning_rate |   min_child_samples |   cv_dice_sampled |   sd_over_folds |   mean_trees |
+|-------------:|----------------:|--------------------:|------------------:|----------------:|-------------:|
+|           31 |            0.1  |                 200 |            0.6504 |          0.0288 |        266.8 |
+|           31 |            0.05 |                  50 |            0.6481 |          0.0317 |        466   |
+|           31 |            0.05 |                 200 |            0.6469 |          0.0331 |        422.4 |
+|           31 |            0.1  |                  50 |            0.6461 |          0.0347 |        220   |
+|           63 |            0.1  |                  50 |            0.6407 |          0.0262 |        132   |
+|           63 |            0.05 |                 200 |            0.6403 |          0.0268 |        261.2 |
+|           63 |            0.1  |                 200 |            0.6395 |          0.0274 |        139.4 |
+|           63 |            0.05 |                  50 |            0.6345 |          0.0271 |        272   |
+|          255 |            0.05 |                 200 |            0.6267 |          0.0401 |        134.6 |
+|          255 |            0.05 |                  50 |            0.6266 |          0.034  |        130.8 |
+|          255 |            0.1  |                  50 |            0.6201 |          0.0406 |         64.4 |
+|          255 |            0.1  |                 200 |            0.6173 |          0.0389 |         62.2 |

@@ -25,6 +25,8 @@ from skimage.feature import multiscale_basic_features
 from acdc.common import RESULTS, TARGET_SPACING, WORK
 from acdc.predict_seg import finalize, score_and_save
 
+# Setting used for all reported results. tune_seg_baseline.py checked 12 settings by 5-fold CV on the training patients:
+# the best (31 leaves, lr 0.1, 200 min samples) was +0.016 sampled Dice, almost all from one fold (within CV noise).
 PARAMS = dict(objective="multiclass", num_class=4, learning_rate=0.05, num_leaves=63, min_child_samples=50,
               feature_fraction=0.8, bagging_fraction=0.8, bagging_freq=1, lambda_l2=1.0, verbose=-1)
 

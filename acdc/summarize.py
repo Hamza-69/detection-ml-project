@@ -93,6 +93,20 @@ def other_section():
     c = RESULTS / "complexity.csv"
     if c.exists():
         out += ["## 4. Complexity\n", md(pd.read_csv(c).round(3)), ""]
+    s = RESULTS / "cls" / "split_sensitivity_summary.csv"
+    if s.exists():
+        out += ["## 5. Sensitivity to the split (diagnosis, logistic regression)\n",
+                "A = nested CV with 10 re-drawn fold assignments; B = 20 random stratified 100/50 train/test splits of all "
+                "150 patients. Segmentations are not re-trained per split.\n",
+                md(pd.read_csv(s).drop(columns=["label"]).round(3)), "", "Figure: `cls/fig_split_sensitivity.png`\n"]
+    t = RESULTS / "seg" / "classical_lgbm_tuning.csv"
+    if t.exists():
+        g = (pd.read_csv(t).groupby(["num_leaves", "learning_rate", "min_child_samples"])
+             .agg(cv_dice_sampled=("dice_sampled", "mean"), sd_over_folds=("dice_sampled", "std"), mean_trees=("best_iter", "mean"))
+             .reset_index().sort_values("cv_dice_sampled", ascending=False))
+        out += ["## 6. Tuning of the classical segmentation baseline (5-fold CV, training patients only)\n",
+                "Dice estimated on 30,000 random pixels per held-out volume (no post-processing). "
+                "Reported baseline: 63 leaves, lr 0.05, 50 min samples.\n", md(g.round(4)), ""]
     return out
 
 

@@ -116,8 +116,9 @@ uv run python -m acdc.predict_seg --cfg unet2d --no_pp
 for c in unet25d unet2d_ce unet2d_noaug; do uv run python -m acdc.predict_seg --cfg $c; done
 
 # 2) classical segmentation baseline (CPU)
-uv run python -m acdc.tune_seg_baseline --threads 6            # LightGBM grid (training patients only)
-uv run python -m acdc.seg_baseline --threads 6
+uv run python -m acdc.tune_seg_baseline --threads 6            # LightGBM grid, 5-fold CV on training patients only
+uv run python -m acdc.seg_baseline --threads 6                 # reported setting 63 leaves / lr 0.05 / 50 min samples:
+                                                               # within CV noise of the best grid point (results/seg/classical_lgbm_tuning*.{csv,json})
 
 # 3) diagnosis: end-to-end CNN (25 short GPU runs) and feature-based classifiers
 bash acdc/run_cls_all.sh
