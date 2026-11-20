@@ -1,6 +1,7 @@
 [project]
-name = "vindr-cxr"
-version = "0.1.0"
+name = "acdc-cardiac"
+version = "1.0.0"
+description = "AUB ML course project: ACDC cardiac MRI segmentation, error propagation and diagnosis (VinDr-CXR milestone code in vindr/)"
 requires-python = ">=3.12"
 dependencies = [
     "ensemble-boxes>=1.0.10",

@@ -3,7 +3,7 @@
 # Safe to run several times (each step overwrites its own outputs). Used as the last steps of the GPU queue.
 set -u
 cd "$(dirname "$0")/.."
-UV=~/.local/bin/uv
+UV=${UV:-$(command -v uv || echo ~/.local/bin/uv)}  # uv on PATH, else the default install location
 SEG=""; for c in classical_lgbm unet2d unet25d unet2d_noaug unet2d_ce unet2d_notta unet2d_nopp; do
   [ -f results/seg/${c}_metrics.csv ] && SEG="$SEG $c"; done
 SRC=""; for c in unet25d unet2d_noaug unet2d_ce; do [ -f results/seg/${c}_metrics.csv ] && SRC="$SRC $c"; done

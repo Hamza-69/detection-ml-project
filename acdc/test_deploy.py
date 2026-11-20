@@ -14,10 +14,12 @@ from pathlib import Path
 
 from gradio_client import Client, handle_file
 
+from acdc.common import DATA_ROOT
+
 ap = argparse.ArgumentParser()
 ap.add_argument("--url", default="https://acdc-cardiac-aub.fly.dev/")
 ap.add_argument("--patient", type=int, default=101)
-ap.add_argument("--data", default="/home/ubuntu/data/acdc/raw/ACDC/database/testing")
+ap.add_argument("--data", default=str(DATA_ROOT / "testing"), help="ACDC testing folder (default: $ACDC_ROOT/testing)")
 ap.add_argument("--machine", default="Fly.io performance-2x (2 dedicated CPUs, 4 GB RAM), region fra",
                 help="description of the server, copied into the JSON")
 ap.add_argument("--out", default="results/deploy_test.json")
